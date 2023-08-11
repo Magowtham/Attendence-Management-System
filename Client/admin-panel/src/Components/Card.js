@@ -1,7 +1,11 @@
 import React from "react";
+import { useNavigate} from "react-router-dom";
 import "../CSS/Card.css";
-
 function Card() {
+  const navigate=useNavigate();
+const tableRout=()=>{
+  navigate("/history",{state:{name:"gowtham"}})
+}
   return (
     <>
       <div className="member-card">
@@ -33,7 +37,7 @@ function Card() {
               </font>
             </a>
           </div>
-          <button>History</button>
+      <button onClick={tableRout}>History</button>
         </div>
       </div>
     </>

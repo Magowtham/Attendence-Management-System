@@ -1,0 +1,18 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.reg-container{
+    border: 2px solid red;
+}
+
+.reg-container form{
+    display: flex;
+    flex-direction: column;
+}
+
+.reg-container form p{
+color: red;
+}

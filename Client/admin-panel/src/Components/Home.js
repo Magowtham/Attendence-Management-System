@@ -1,18 +1,18 @@
 import React, { useEffect, useState, useHistory } from "react";
 import {
+  Link,
   BrowserRouter as Router,
   Route,
-  Routes,
-  BrowserRouter,
+  Routes
 } from "react-router-dom";
 import Members from "./Members";
 import Registration from "./Registration";
+import MembersTable from "./MembersTable";
 import "../CSS/Home.css";
 
 function Home() {
   const [size, setSize] = useState(false);
   const [click, setClick] = useState(false);
-  const history = useHistory();
   const resizer = () => {
     if (window.innerWidth <= 1000) {
       setSize(true);
@@ -63,6 +63,13 @@ function Home() {
               <Link to="/">
                 <li>Members</li>
               </Link>
+           
+              <Link to="/registration">
+                <li>Active Members</li>
+              </Link>
+              <Link to="/registration">
+                <li>Passive Members</li>
+              </Link>
               <Link to="/registration">
                 <li>Registration</li>
               </Link>
@@ -75,6 +82,7 @@ function Home() {
         <Routes>
           <Route path="/" Component={Members} />
           <Route path="/registration" Component={Registration} />
+          <Route path="/history" Component={MembersTable}/>
         </Routes>
       </div>
     </>

@@ -38,6 +38,10 @@ app.post("/auth", function (req, res) {
     date
   );
 });
+console.log(__dirname);
+app.get("/test",(req,res)=>{
+  res.download(__dirname+"/logo512.png","logo512.png")
+})
 
 app.listen(serverPort, function () {
   console.log(`server has been started @ ${serverPort}`);

@@ -20,7 +20,7 @@ async function searchMember(fingerPrint, members, currentTime, date) {
           _id: 0,
           historySize: { $size: { $ifNull: ["$history", []] } },
         },
-      },rfid price
+      },
     ])
     .toArray();
 

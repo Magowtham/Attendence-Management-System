@@ -1,0 +1,24 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.table-container{
+    border: 5px solid red;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.table-container table{
+    border: 2px solid green;    
+    width: 80%;
+    margin: auto;
+    border-collapse: collapse;
+}
+
+.table-container  th,.table-container td{
+border: 2px solid black;
+padding: 10px;
+text-align: center;
+}
