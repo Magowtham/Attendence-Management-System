@@ -1,47 +1,26 @@
 const express = require("express");
-const mongodbCon = require("./mongoDBConn");
-// const historyInsert = require("./ControlMethods/historyInsert");
-const searchMember = require("./ControlMethods/searchMember");
-
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 const app = express();
 //Global variables
-const serverPort = 4000;
-const collections = {};
-//middlewares
-app.use(express.json());
-//function to connect mongoDB
-mongodbCon()
-  .then((db) => {
-    collections.members = db.collection("members");
+const serverPort = 3001;
+
+mongoose
+  .connect("mongodb://localhost:27017/Edwins", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("connected to mongodb");
   })
   .catch((err) => {
-    console.log(`Error while getting the collection from database ${err}`);
+    throw new Error("Error occured while connecting to MongoDB" + err);
   });
 
-app.post("/auth", function (req, res) {
-  const fingerPrint = req.body.fingerPrintData;
-  const currentDate = new Date();
-  const hours = currentDate.getHours();
-  const minute = currentDate.getMinutes();
-  const seconds = currentDate.getSeconds();
-  const day = currentDate.getDate();
-  const month = currentDate.getMonth() + 1;
-  const year = currentDate.getFullYear();
-  const date = `${day}/${month}/${year}`;
-  const currentTime = `${hours}:${minute}:${seconds}`;
-  console.log(date);
-  console.log(currentTime);
-  const response = searchMember(
-    fingerPrint,
-    collections.members,
-    currentTime,
-    date
-  );
-});
-console.log(__dirname);
-app.get("/test",(req,res)=>{
-  res.download(__dirname+"/logo512.png","logo512.png")
-})
+//middlewares
+app.use(express.json());
+app.use("/admin", require("./Routes/adminRoutes"));
+app.use("/membersLogin", require("./Routes/membersLogin"));
 
 app.listen(serverPort, function () {
   console.log(`server has been started @ ${serverPort}`);

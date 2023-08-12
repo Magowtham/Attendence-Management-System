@@ -12,6 +12,7 @@
   padding: 10px;
   margin: auto;
   width: 100%;
+  position: relative;
 }
 
 .member-img-sec img {
@@ -63,4 +64,15 @@
 .member-footer-sec .Social-media font {
   font-size: 1.4rem;
   color: black;
+}
+
+.inlab-status{
+  max-width: 18px;
+  max-height: 18px;
+  background:green;
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
 }
