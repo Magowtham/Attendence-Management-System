@@ -1,3 +1,5 @@
-const members = (req, res) => {};
+const membersRegister = (req, res) => {
+  //   console.log(req.body);
+};
 
-module.exports = members;
+module.exports = { membersRegister };

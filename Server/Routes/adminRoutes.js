@@ -1,10 +1,11 @@
 const express = require("express");
-
+const { adminRegister, adminLogin } = require("../Controllers/admins");
+const { membersRegister } = require("../Controllers/members");
+const authToken = require("../Controllers/authToken");
 const routes = express.Router();
 
-routes.post("/register", require("../Controllers/adminRegister"));
-routes.post("/login", require("../Controllers/adminLogin"));
-routes.post("/membersRegAuth", require("../Controllers/membersRegAuth"));
-routes.post("/membersRegister", require("../Controllers/membersRegister"));
+routes.post("/register", adminRegister);
+routes.post("/login", adminLogin);
+routes.post("/memberReg", authToken, membersRegister);
 
 module.exports = routes;
