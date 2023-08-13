@@ -11,18 +11,16 @@ const tokenVerifier = async (token, screteKey) => {
   }
 };
 const authToken = async (req, res, next) => {
-  const token = req.headers.authorization.includes("Bearer")
-    ? req.headers.authorization.split(" ")[1]
-    : req.headers.authorization;
+  const token = req.cookies.token;
   tokenVerifier(token, process.env.SECRETE_KEY)
     .then((decoded) => {
-      console.log(decoded);
-      res.status(202).send("token verified");
+      res.status(202).json({ status: true });
+      next();
     })
     .catch((err) => {
-      res.status(401).send("invalid token " + err);
+      console.log(false);
+      res.status(401).json({ status: false });
     });
-  //   next();
 };
 
 module.exports = authToken;

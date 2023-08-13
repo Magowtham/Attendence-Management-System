@@ -7,14 +7,14 @@ function Registration() {
     name: "",
     usn: "",
     email: "",
-    imgLink: "",
+    imageLink: "",
     githubLink: "",
     linkedinLink: "",
   };
   const [formData, setFormData] = useState(initialFormData);
   const [formError, setFormError] = useState({});
   const [isFormSetted, setIsFormSetted] = useState(false);
-  const baseUrl = "";
+  const baseUrl = "http://localhost:5001/admin/memberReg";
   const validateFormData = (values) => {
     const errors = {};
     const emailRegex = /^[(\w\d\W)+]+@[\w+]+\.[\w+]+$/i;
@@ -30,10 +30,10 @@ function Registration() {
     } else if (!emailRegex.test(values.email)) {
       errors.emailErr = "Email is invalid";
     }
-    if (!values.imgLink) {
-      errors.imgLinkError = "Image is required";
-    } else if (!urlRegex.test(values.imgLink)) {
-      errors.imgLinkError = "Image url is not valid";
+    if (!values.imageLink) {
+      errors.imageLinkError = "Image is required";
+    } else if (!urlRegex.test(values.imageLink)) {
+      errors.imageLinkError = "Image url is not valid";
     }
     if (!values.githubLink) {
       errors.githubLinkError = "GitHub url is required";
@@ -47,30 +47,15 @@ function Registration() {
     }
     return errors;
   };
-  const sendFormData = () => {
-    axios({
-      method: "POST",
-      url: baseUrl,
-      data: "",
-      headers: { "Content-Type": "multipart/form-data" },
-    })
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((err) => {
-        console.log(`An error was occured while sending the data ${err}`);
-      });
-  };
 
   const handleFormData = (e) => {
     e.preventDefault();
     setIsFormSetted(true);
-    const target = e.target;
     setFormData({
       name: e.target[0].value,
       usn: e.target[1].value,
       email: e.target[2].value,
-      imgLink: e.target[3].value,
+      imageLink: e.target[3].value,
       githubLink: e.target[4].value,
       linkedinLink: e.target[5].value,
     });
@@ -81,7 +66,20 @@ function Registration() {
     }
   }, [formData]);
   useEffect(() => {
-    console.log(formError);
+    if (isFormSetted && Object.keys(formError).length === 0) {
+      axios({
+        method: "POST",
+        url: baseUrl,
+        data: formData,
+        headers: { "Content-Type": "application/json" },
+      })
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((err) => {
+          console.log(`An error was occured while sending the data ${err}`);
+        });
+    }
   }, [formError]);
   return (
     <>

@@ -1,18 +1,17 @@
 import React, { useEffect, useState, useHistory } from "react";
-import {
-  Link,
-  BrowserRouter as Router,
-  Route,
-  Routes
-} from "react-router-dom";
+import axios from "axios";
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import Members from "./Members";
 import Registration from "./Registration";
 import MembersTable from "./MembersTable";
 import "../CSS/Home.css";
 
 function Home() {
+  const navigate = useNavigate();
+  const [verified, setVerified] = useState(false);
   const [size, setSize] = useState(false);
   const [click, setClick] = useState(false);
+
   const resizer = () => {
     if (window.innerWidth <= 1000) {
       setSize(true);
@@ -21,9 +20,28 @@ function Home() {
     }
   };
   useEffect(() => {
+    axios
+      .get("http://localhost:5001/admin/verify", {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.status) {
+          setVerified(true);
+        }
+      })
+      .catch((err) => {
+        console.log("An error was occured");
+        navigate("/AdminLogin");
+      });
+  });
+  useEffect(() => {
     window.addEventListener("resize", resizer);
     resizer();
-  });
+  }, []);
+
+  if (!verified) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <>
@@ -63,7 +81,7 @@ function Home() {
               <Link to="/">
                 <li>Members</li>
               </Link>
-           
+
               <Link to="/registration">
                 <li>Active Members</li>
               </Link>
@@ -79,10 +97,11 @@ function Home() {
             </div>
           </div>
         </div>
+
         <Routes>
-          <Route path="/" Component={Members} />
+          <Route path="/" exact Component={Members} />
           <Route path="/registration" Component={Registration} />
-          <Route path="/history" Component={MembersTable}/>
+          <Route path="/history" Component={MembersTable} />
         </Routes>
       </div>
     </>

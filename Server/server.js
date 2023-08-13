@@ -1,4 +1,6 @@
 const express = require("express");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const app = express();
@@ -18,6 +20,13 @@ mongoose
   });
 
 //middlewares
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
+app.use(cookieParser());
 app.use(express.json());
 app.use("/admin", require("./Routes/adminRoutes"));
 // app.use("/membersLogin", require("./Routes/membersLogin"));
