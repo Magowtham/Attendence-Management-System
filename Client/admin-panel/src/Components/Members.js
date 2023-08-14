@@ -22,6 +22,7 @@ function Members() {
       <div className="members-grid">
         {membersData.map((member) => (
           <Card
+            id={member._id}
             name={member.name}
             usn={member.usn}
             imageLink={member.imageLink}

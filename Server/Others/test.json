@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Gowtham",
+    "usn": "4AL21EC029",
+    "email": "ma1gowtham@gmail.com",
+    "imageLink": "https://media.licdn.com/dms/image/C5603AQEYIfLt-1Hqgw/profile-displayphoto-shrink_800_800/0/1661957350678?e=2147483647&v=beta&t=8IN11JV8QK_fESs0qg_cBDSMpad7hM4PzyYd_hWKvPY",
+    "githubLink": "https://github.com",
+    "linkedinLink": "https://linkedin.com",
+    "history": [
+      { "date": "17/4/2023", "loginTime": "17:40", "logoutTime": "18:35" },
+      { "date": "17/4/2023", "loginTime": "17:40", "logoutTime": "18:35" }
+    ]
+  },
+  {
+    "name": "Sathwik KD",
+    "usn": "4AL21IS047",
+    "email": "magowtham@gmail.com",
+    "imageLink": "https://media.licdn.com/dms/image/C4D03AQFBS085viErmQ/profile-displayphoto-shrink_800_800/0/1638701855466?e=2147483647&v=beta&t=NGdkvkzsv8C37hReydJr4a8-fekeJdx9Jgca8aiMvUY",
+    "githubLink": "https://github.com",
+    "linkedinLink": "https://linkedin.com",
+    "history": [
+      { "date": "17/4/2023", "loginTime": "16:40", "logoutTime": "18:35" },
+      { "date": "17/4/2023", "loginTime": "17:40", "logoutTime": "18:35" }
+    ]
+  }
+]

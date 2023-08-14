@@ -1,41 +1,34 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTable } from "react-table";
+import axios from "axios";
 import "../CSS/MembersTable.css";
 
 function MembersTable() {
+  const [memberId, setMemberId] = useState("");
+  const [memberHistory, setMemberHistory] = useState([]);
   const navigate = useNavigate();
   const { state } = useLocation();
+  const baseUrl = "http://localhost:5001/admin/memberTable";
+  useEffect(() => {
+    setMemberId(state?.id);
+  });
+  useEffect(() => {
+    if (memberId) {
+      console.log(memberId);
+      axios
+        .post(baseUrl, state)
+        .then((res) => {
+          setMemberHistory(console.log(res.data[0].history[0]));
+        })
+        .catch((err) => {
+          throw err;
+        });
+    }
+  }, [memberId]);
 
-  const usrData = [
-    {
-      id: 1,
-      date: "7/4/2023",
-      loginTime: "19:30",
-      logoutTime: "19:30",
-      totalHours: "3",
-    },
-    {
-      id: 2,
-      date: "7/4/2023",
-      loginTime: "19:30",
-      logoutTime: "19:30",
-      totalHours: "3",
-    },
-    {
-      id: 3,
-      date: "7/4/2023",
-      loginTime: "19:30",
-      logoutTime: "19:30",
-      totalHours: "3",
-    },
-  ];
   const columns = useMemo(
     () => [
-      {
-        Header: "SL No.",
-        accessor: "id",
-      },
       {
         Header: "Date",
         accessor: "date",
@@ -48,10 +41,6 @@ function MembersTable() {
         Header: "Logout Time",
         accessor: "logoutTime",
       },
-      {
-        Header: "Totale Hours",
-        accessor: "totalHours",
-      },
     ],
     []
   );
@@ -59,7 +48,9 @@ function MembersTable() {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,
-      data: usrData,
+      data: memberHistory
+        ? memberHistory
+        : [{ datae: "123", loginTime: "12:30", logoutTime: "4:40" }],
     });
 
   const backRout = () => {

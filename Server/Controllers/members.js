@@ -1,4 +1,5 @@
 const members = require("../Models/membersRegModel");
+const mongoose = require("mongoose");
 
 const membersRegister = async (req, res) => {
   const { name, usn, email, imageLink, githubLink, linkedinLink } = req.body;
@@ -39,7 +40,6 @@ const membersData = async (req, res) => {
     const pipeLine = [
       {
         $project: {
-          _id: 0,
           __v: 0,
         },
       },
@@ -52,4 +52,20 @@ const membersData = async (req, res) => {
   }
 };
 
-module.exports = { membersRegister, membersData };
+const memberTable = async (req, res) => {
+  const pipeLine = [
+    {
+      $match: { _id: new mongoose.Types.ObjectId(req.body?.id) },
+    },
+    {
+      $project: {
+        _id: 0,
+        history: 1,
+      },
+    },
+  ];
+  const memberHistory = await members.aggregate(pipeLine);
+  res.json(memberHistory);
+};
+
+module.exports = { membersRegister, membersData, memberTable };

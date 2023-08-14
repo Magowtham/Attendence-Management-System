@@ -22,10 +22,14 @@ mongoose
 //middlewares
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "http://192.168.19.150:5500",
     credentials: true,
   })
 );
+
+app.get("/data", (req, res) => {
+  res.json({ status: true });
+});
 app.use(cookieParser());
 app.use(express.json());
 app.use("/admin", require("./Routes/adminRoutes"));

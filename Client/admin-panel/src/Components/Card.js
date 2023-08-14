@@ -1,10 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../CSS/Card.css";
-function Card({ name, usn, email, imageLink, githubLink, linkedinLink }) {
+function Card({ id, name, usn, email, imageLink, githubLink, linkedinLink }) {
   const navigate = useNavigate();
   const tableRout = () => {
-    navigate("/history", { state: { name: "gowtham" } });
+    navigate("/history", { state: { id } });
   };
   console.log(name);
   return (
