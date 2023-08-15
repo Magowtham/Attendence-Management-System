@@ -26,6 +26,10 @@ const memberSchema = new mongoose.Schema({
   linkedinLink: {
     type: String,
   },
+  history: {
+    type: [Object],
+    default: [],
+  },
 });
 
 module.exports = mongoose.model("members", memberSchema);

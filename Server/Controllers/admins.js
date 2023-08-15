@@ -48,12 +48,12 @@ const adminLogin = async (req, res) => {
           email: user.email,
         };
         const token = jwt.sign(payload, process.env.SECRETE_KEY, {
-          expiresIn: "7d",
+          expiresIn: "50s",
         });
         const expirationDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
         res
           .status(202)
-          .cookie("token", token, { expires: expirationDate, httpOnly: true })
+          .cookie("token", token, { expires: expirationDate, httpOnly: false })
           .json({ status: true });
       } else {
         res.status(400).json({ status: false });

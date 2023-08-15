@@ -79,17 +79,7 @@ module.exports = searchMember;
 
 // app.post("/auth", function (req, res) {
 //   const fingerPrint = req.body.fingerPrintData;
-//   const currentDate = new Date();
-//   const hours = currentDate.getHours();
-//   const minute = currentDate.getMinutes();
-//   const seconds = currentDate.getSeconds();
-//   const day = currentDate.getDate();
-//   const month = currentDate.getMonth() + 1;
-//   const year = currentDate.getFullYear();
-//   const date = `${day}/${month}/${year}`;
-//   const currentTime = `${hours}:${minute}:${seconds}`;
-//   console.log(date);
-//   console.log(currentTime);
+
 //   const response = searchMember(
 //     fingerPrint,
 //     collections.members,

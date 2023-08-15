@@ -22,7 +22,7 @@ mongoose
 //middlewares
 app.use(
   cors({
-    origin: "http://192.168.19.150:5500",
+    origin: "http://localhost:3000",
     credentials: true,
   })
 );
@@ -33,7 +33,7 @@ app.get("/data", (req, res) => {
 app.use(cookieParser());
 app.use(express.json());
 app.use("/admin", require("./Routes/adminRoutes"));
-// app.use("/membersLogin", require("./Routes/membersLogin"));
+app.use("/memberLogin", require("./Routes/membersRoute"));
 
 app.listen(serverPort, function () {
   console.log(`server has been started @ ${serverPort}`);

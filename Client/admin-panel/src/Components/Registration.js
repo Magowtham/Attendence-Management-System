@@ -31,7 +31,7 @@ function Registration() {
       errors.emailErr = "Email is invalid";
     }
     if (!values.imageLink) {
-      errors.imageLinkError = "Image is required";
+      errors.imageLinkError = "Image url is required";
     } else if (!urlRegex.test(values.imageLink)) {
       errors.imageLinkError = "Image url is not valid";
     }
@@ -96,7 +96,7 @@ function Registration() {
           <p>{formError.emailErr}</p>
           <label for="email">Member Profile Image URL:</label>
           <input type="text" id="img-link" placeholder="Profile Image URL" />
-          <p>{formError.imgLinkError}</p>
+          <p>{formError.imageLinkError}</p>
           <label for="email">Member Github URL:</label>
           <input type="text" id="github-link" placeholder="Github URL" />
           <p>{formError.githubLinkError}</p>
