@@ -30,6 +30,10 @@ const memberSchema = new mongoose.Schema({
     type: [Object],
     default: [],
   },
+  loginStatus:{
+    type:Boolean,
+    default:false
+  }
 });
 
 module.exports = mongoose.model("members", memberSchema);

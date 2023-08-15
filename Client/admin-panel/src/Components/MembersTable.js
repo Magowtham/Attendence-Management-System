@@ -6,26 +6,23 @@ import "../CSS/MembersTable.css";
 
 function MembersTable() {
   const [memberId, setMemberId] = useState("");
-  const [memberHistory, setMemberHistory] = useState([]);
+  const [memberHistory,setMemberHistory]=useState([]);
   const navigate = useNavigate();
   const { state } = useLocation();
   const baseUrl = "http://localhost:5001/admin/memberTable";
   useEffect(() => {
     setMemberId(state?.id);
-  });
-  useEffect(() => {
-    if (memberId) {
-      console.log(memberId);
-      axios
-        .post(baseUrl, state)
-        .then((res) => {
-          setMemberHistory(console.log(res.data[0].history[0]));
-        })
-        .catch((err) => {
-          throw err;
-        });
-    }
-  }, [memberId]);
+  },[state]);
+
+  useEffect(()=>{
+    if(memberHistory.length===0&&memberId){
+        axios.post(baseUrl,{id:memberId}).then((res)=>{
+          setMemberHistory(res.data);
+        }).catch((err=>{
+          console.log(err);
+        }))
+        }
+  },[memberHistory,memberId])
 
   const columns = useMemo(
     () => [
@@ -40,6 +37,10 @@ function MembersTable() {
       {
         Header: "Logout Time",
         accessor: "logoutTime",
+      },
+      {
+        Header: "Total Hours",
+        accessor: "totalTime",
       },
     ],
     []

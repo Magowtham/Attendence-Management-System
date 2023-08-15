@@ -7,7 +7,6 @@
 }
 
 .member-card {
-  border: 1px solid black;
   border-radius: 8px;
   padding: 10px;
   margin: auto;
@@ -24,7 +23,24 @@
 .member-info-sec {
   /* border: 2px solid green; */
   padding: 5px;
+  position: relative;
 }
+
+.member-status{
+  width: 30px;
+  height: 30px;
+  border: 2px solid red;
+  border-radius: 50%;
+  position: absolute;
+  right: 5%;
+  background: brown;
+}
+
+.login{
+  background: green;
+}
+
+
 
 .member-info-sec h1 {
   font-size: 1.2rem;

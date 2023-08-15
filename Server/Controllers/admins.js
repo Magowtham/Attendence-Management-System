@@ -48,7 +48,7 @@ const adminLogin = async (req, res) => {
           email: user.email,
         };
         const token = jwt.sign(payload, process.env.SECRETE_KEY, {
-          expiresIn: "50s",
+          expiresIn: "50h",
         });
         const expirationDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
         res

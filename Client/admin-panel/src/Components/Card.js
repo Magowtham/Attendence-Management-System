@@ -1,12 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../CSS/Card.css";
-function Card({ id, name, usn, email, imageLink, githubLink, linkedinLink }) {
+function Card({ id, name, usn, email, imageLink, githubLink, linkedinLink,loginStatus }) {
   const navigate = useNavigate();
   const tableRout = () => {
     navigate("/history", { state: { id } });
   };
-  console.log(name);
   return (
     <>
       <div className="member-card">
@@ -15,6 +14,7 @@ function Card({ id, name, usn, email, imageLink, githubLink, linkedinLink }) {
           <img src={imageLink} alt="" />
         </div>
         <div className="member-info-sec">
+          <div className={`member-status  ${loginStatus?`login`:``}`}></div>
           <h1>{name}</h1>
           <h2>{usn}</h2>
         </div>

@@ -11,12 +11,12 @@ function Members() {
       .get(baseUrl)
       .then((res) => {
         setMembersData(res.data);
+
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
-  console.log(membersData);
   return (
     <>
       <div className="members-grid">
@@ -29,6 +29,7 @@ function Members() {
             email={member.email}
             githubLink={member.githubLink}
             linkedinLink={member.linkedinLink}
+            loginStatus={member.loginStatus}
           />
         ))}
       </div>

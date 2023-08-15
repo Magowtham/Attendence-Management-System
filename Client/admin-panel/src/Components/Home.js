@@ -4,6 +4,8 @@ import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import Members from "./Members";
 import Registration from "./Registration";
 import MembersTable from "./MembersTable";
+import ActiveMembers from "./ActiveMembers";
+import InActiveMembers from "./InActiveMembers";
 import "../CSS/Home.css";
 
 function Home() {
@@ -82,11 +84,11 @@ function Home() {
                 <li>Members</li>
               </Link>
 
-              <Link to="/registration">
+              <Link to="/activeMembers">
                 <li>Active Members</li>
               </Link>
-              <Link to="/registration">
-                <li>Passive Members</li>
+              <Link to="/inActiveMembers">
+                <li>Inactive Members</li>
               </Link>
               <Link to="/registration">
                 <li>Registration</li>
@@ -102,6 +104,8 @@ function Home() {
           <Route path="/" exact Component={Members} />
           <Route path="/registration" Component={Registration} />
           <Route path="/history" Component={MembersTable} />
+          <Route path="/activeMembers" Component={ActiveMembers} />
+          <Route path="/inActiveMembers" Component={InActiveMembers}/>
         </Routes>
       </div>
     </>
