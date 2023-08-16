@@ -1,11 +1,15 @@
 const express = require("express");
-const { adminRegister, adminLogin } = require("../Controllers/admins");
+const {
+  adminRegister,
+  adminLogin,
+  memberRegAuth,
+} = require("../Controllers/admins");
 const {
   membersRegister,
   membersData,
   memberTable,
   activeMembers,
-  inActiveMembers
+  inActiveMembers,
 } = require("../Controllers/members");
 const authToken = require("../Controllers/authToken");
 const routes = express.Router();
@@ -16,7 +20,8 @@ routes.post("/login", adminLogin);
 routes.post("/memberReg", membersRegister);
 routes.get("/membersData", membersData);
 routes.post("/memberTable", memberTable);
-routes.get("/activeMembers",activeMembers);
-routes.get("/inActiveMembers",inActiveMembers)
+routes.get("/activeMembers", activeMembers);
+routes.get("/inActiveMembers", inActiveMembers);
+routes.post("/memberRegAuth", memberRegAuth);
 
 module.exports = routes;

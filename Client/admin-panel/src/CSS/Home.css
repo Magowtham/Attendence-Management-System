@@ -20,7 +20,7 @@ nav .logo-sec img {
   height: 100%;
 }
 .home-container {
-  border: 2px solid black;
+  border: 2px solid rgb(183, 255, 1);
   display: flex;
 }
 .side-bar {
@@ -72,7 +72,7 @@ nav .logo-sec img {
 }
 
 .side-bar .routes-sec {
-  border: 2px solid red;
+  border: 1px solid red;
   margin-top: 80px;
   height: 50%;
   display: flex;

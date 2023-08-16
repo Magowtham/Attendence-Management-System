@@ -14,7 +14,7 @@ const authToken = async (req, res, next) => {
   const token = req.cookies.token;
   tokenVerifier(token, process.env.SECRETE_KEY)
     .then((decoded) => {
-      res.status(202).json({ status: true });
+      res.status(202).json({ status: true, adminInfo: decoded });
       next();
     })
     .catch((err) => {

@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useHistory } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
+import { Dataprovider } from "./DataContext";
 import Members from "./Members";
 import Registration from "./Registration";
 import MembersTable from "./MembersTable";
@@ -11,6 +12,7 @@ import "../CSS/Home.css";
 function Home() {
   const navigate = useNavigate();
   const [verified, setVerified] = useState(false);
+  const [adminUsn, setAdminUsn] = useState("");
   const [size, setSize] = useState(false);
   const [click, setClick] = useState(false);
 
@@ -27,13 +29,15 @@ function Home() {
         withCredentials: true,
       })
       .then((res) => {
-        if (res.status) {
+        console.log(res.data);
+        if (res.data) {
           setVerified(true);
+          setAdminUsn(res.data?.adminInfo?.usn);
         }
       })
       .catch((err) => {
-        console.log("An error was occured");
         navigate("/AdminLogin");
+        throw err;
       });
   });
   useEffect(() => {
@@ -75,7 +79,7 @@ function Home() {
               <img src="/Media/profile.jpeg" alt="" />
             </div>
             <div className="info-sec">
-              <h1>Edwin</h1>
+              <h1>{adminUsn}</h1>
             </div>
           </div>
           <div className="routes-sec">
@@ -90,7 +94,7 @@ function Home() {
               <Link to="/inActiveMembers">
                 <li>Inactive Members</li>
               </Link>
-              <Link to="/registration">
+              <Link to="/registration" state={{ adminUsn }}>
                 <li>Registration</li>
               </Link>
             </ul>
@@ -99,13 +103,12 @@ function Home() {
             </div>
           </div>
         </div>
-
         <Routes>
           <Route path="/" exact Component={Members} />
           <Route path="/registration" Component={Registration} />
           <Route path="/history" Component={MembersTable} />
           <Route path="/activeMembers" Component={ActiveMembers} />
-          <Route path="/inActiveMembers" Component={InActiveMembers}/>
+          <Route path="/inActiveMembers" Component={InActiveMembers} />
         </Routes>
       </div>
     </>

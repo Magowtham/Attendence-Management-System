@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../CSS/Registration.css";
+import { useLocation } from "react-router-dom";
 
 function Registration() {
+  const location = useLocation();
   const initialFormData = {
     name: "",
     usn: "",
@@ -14,7 +16,12 @@ function Registration() {
   const [formData, setFormData] = useState(initialFormData);
   const [formError, setFormError] = useState({});
   const [isFormSetted, setIsFormSetted] = useState(false);
+  const [isFormValidated, setIsFormValidated] = useState(false);
+  const [adminFormError, setAdminFormError] = useState({ passwordError: "" });
+  const [adminUsn, setAdminUsn] = useState("");
+  const [isAdminValidated, setIsAdminValidated] = useState(false);
   const baseUrl = "http://localhost:5001/admin/memberReg";
+  const adminAuthUrl = "http://localhost:5001/admin/memberRegAuth";
   const validateFormData = (values) => {
     const errors = {};
     const emailRegex = /^[(\w\d\W)+]+@[\w+]+\.[\w+]+$/i;
@@ -60,6 +67,35 @@ function Registration() {
       linkedinLink: e.target[5].value,
     });
   };
+  const authAdmin = (e) => {
+    e.preventDefault();
+    if (!e.target[0].value) {
+      setAdminFormError({ error: "Admin password required" });
+    } else {
+      axios
+        .post(adminAuthUrl, { usn: adminUsn, password: e.target[0].value })
+        .then((res) => {
+          setIsAdminValidated(res.status);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+  useEffect(() => {
+    if (!adminUsn) {
+      setAdminUsn(location.state?.adminUsn);
+    }
+  }, [location.state]);
+  useEffect(() => {
+    if (isFormValidated) {
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          setIsFormValidated(false);
+        }
+      });
+    }
+  }, [isFormValidated]);
   useEffect(() => {
     if (isFormSetted) {
       setFormError(validateFormData(formData));
@@ -67,6 +103,11 @@ function Registration() {
   }, [formData]);
   useEffect(() => {
     if (isFormSetted && Object.keys(formError).length === 0) {
+      setIsFormValidated(true);
+    }
+  }, [formError]);
+  useEffect(() => {
+    if (isAdminValidated) {
       axios({
         method: "POST",
         url: baseUrl,
@@ -80,10 +121,26 @@ function Registration() {
           console.log(`An error was occured while sending the data ${err}`);
         });
     }
-  }, [formError]);
+  }, [isAdminValidated]);
+
   return (
     <>
+      <div
+        className={`reg-container-overlay  ${isFormValidated ? `popup` : ``}`}
+        onClick={() => {
+          setIsFormValidated(false);
+        }}
+      ></div>
       <div className="reg-container">
+        <form
+          className={`login-popup-page ${isFormValidated ? `popup` : ``}`}
+          onSubmit={authAdmin}
+        >
+          <label>Admin Password</label>
+          <input type="password" placeholder="Admin password..." />
+          <p>{adminFormError.error}</p>
+          <input type="submit" value="submit" />
+        </form>
         <form onSubmit={handleFormData}>
           <label for="name">Member Name:</label>
           <input type="text" id="name" placeholder="Name" />
