@@ -37,7 +37,7 @@ function Home() {
       })
       .catch((err) => {
         navigate("/AdminLogin");
-        throw err;
+        console.log(err);
       });
   });
   useEffect(() => {

@@ -58,6 +58,7 @@ function Registration() {
   const handleFormData = (e) => {
     e.preventDefault();
     setIsFormSetted(true);
+    setAdminFormError({ error: "" });
     setFormData({
       name: e.target[0].value,
       usn: e.target[1].value,
@@ -75,13 +76,20 @@ function Registration() {
       axios
         .post(adminAuthUrl, { usn: adminUsn, password: e.target[0].value })
         .then((res) => {
-          setIsAdminValidated(res.status);
+          if (res.data?.status) {
+            setIsAdminValidated(true);
+            setIsFormValidated(false);
+          } else {
+            setIsAdminValidated(false);
+            setAdminFormError({ error: "Passowrd incorrect" });
+          }
         })
         .catch((err) => {
           console.log(err);
         });
     }
   };
+
   useEffect(() => {
     if (!adminUsn) {
       setAdminUsn(location.state?.adminUsn);
@@ -106,6 +114,7 @@ function Registration() {
       setIsFormValidated(true);
     }
   }, [formError]);
+
   useEffect(() => {
     if (isAdminValidated) {
       axios({
