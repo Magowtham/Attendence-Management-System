@@ -26,21 +26,18 @@
   position: relative;
 }
 
-.member-status{
-  width: 30px;
-  height: 30px;
-  border: 2px solid red;
+.member-status {
+  width: 25px;
+  height: 25px;
   border-radius: 50%;
   position: absolute;
   right: 5%;
   background: brown;
 }
 
-.login{
+.login {
   background: green;
 }
-
-
 
 .member-info-sec h1 {
   font-size: 1.2rem;
@@ -82,10 +79,10 @@
   color: black;
 }
 
-.inlab-status{
+.inlab-status {
   max-width: 18px;
   max-height: 18px;
-  background:green;
+  background: green;
   border-radius: 50%;
   position: absolute;
   left: 50%;
