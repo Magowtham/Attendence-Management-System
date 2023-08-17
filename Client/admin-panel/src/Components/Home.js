@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
-import { Dataprovider } from "./DataContext";
 import Members from "./Members";
 import Registration from "./Registration";
 import MembersTable from "./MembersTable";
@@ -45,6 +44,19 @@ function Home() {
     resizer();
   }, []);
 
+  const handleLogout = () => {
+    axios
+      .get("http://localhost:5001/admin/logout", { withCredentials: true })
+      .then((res) => {
+        if (res.data?.status) {
+          navigate("/AdminLogin");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   if (!verified) {
     return <p>Loading...</p>;
   }
@@ -76,7 +88,10 @@ function Home() {
         >
           <div className="profile-sec">
             <div className="image-sec">
-              <img src="/Media/profile.jpeg" alt="" />
+              <img
+                src="https://media.licdn.com/dms/image/C5603AQEYIfLt-1Hqgw/profile-displayphoto-shrink_800_800/0/1661957350678?e=2147483647&v=beta&t=8IN11JV8QK_fESs0qg_cBDSMpad7hM4PzyYd_hWKvPY"
+                alt=""
+              />
             </div>
             <div className="info-sec">
               <h1>{adminUsn}</h1>
@@ -84,32 +99,38 @@ function Home() {
           </div>
           <div className="routes-sec">
             <ul>
-              <Link to="/">
+              <Link to="/" style={{ textDecoration: "none" }}>
                 <li>Members</li>
               </Link>
 
-              <Link to="/activeMembers">
+              <Link to="/activeMembers" style={{ textDecoration: "none" }}>
                 <li>Active Members</li>
               </Link>
-              <Link to="/inActiveMembers">
+              <Link to="/inActiveMembers" style={{ textDecoration: "none" }}>
                 <li>Inactive Members</li>
               </Link>
-              <Link to="/registration" state={{ adminUsn }}>
+              <Link
+                to="/registration"
+                state={{ adminUsn }}
+                style={{ textDecoration: "none" }}
+              >
                 <li>Registration</li>
               </Link>
             </ul>
             <div className="footer-sec">
-              <button>Logut</button>
+              <button onClick={handleLogout}>Logut</button>
             </div>
           </div>
         </div>
-        <Routes>
-          <Route path="/" exact Component={Members} />
-          <Route path="/registration" Component={Registration} />
-          <Route path="/history" Component={MembersTable} />
-          <Route path="/activeMembers" Component={ActiveMembers} />
-          <Route path="/inActiveMembers" Component={InActiveMembers} />
-        </Routes>
+        <div className="sub-components-sec">
+          <Routes>
+            <Route path="/" exact Component={Members} />
+            <Route path="/registration" Component={Registration} />
+            <Route path="/history" Component={MembersTable} />
+            <Route path="/activeMembers" Component={ActiveMembers} />
+            <Route path="/inActiveMembers" Component={InActiveMembers} />
+          </Routes>
+        </div>
       </div>
     </>
   );

@@ -48,7 +48,7 @@ const adminLogin = async (req, res) => {
           email: user.email,
         };
         const token = jwt.sign(payload, process.env.SECRETE_KEY, {
-          expiresIn: "20s",
+          expiresIn: "20h",
         });
         const expirationDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
         res
@@ -93,4 +93,11 @@ const memberRegAuth = async (req, res) => {
   }
 };
 
-module.exports = { adminRegister, adminLogin, memberRegAuth };
+const adminLogout = (req, res) => {
+  console.log(req.headers);
+  res
+    .cookie("token", "", "/", { expires: new Date(0), httpOnly: true })
+    .json({ status: true });
+};
+
+module.exports = { adminRegister, adminLogin, memberRegAuth, adminLogout };

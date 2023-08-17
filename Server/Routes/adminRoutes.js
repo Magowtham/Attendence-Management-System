@@ -3,6 +3,7 @@ const {
   adminRegister,
   adminLogin,
   memberRegAuth,
+  adminLogout,
 } = require("../Controllers/admins");
 const {
   membersRegister,
@@ -23,5 +24,6 @@ routes.post("/memberTable", memberTable);
 routes.get("/activeMembers", activeMembers);
 routes.get("/inActiveMembers", inActiveMembers);
 routes.post("/memberRegAuth", memberRegAuth);
+routes.get("/logout", adminLogout);
 
 module.exports = routes;

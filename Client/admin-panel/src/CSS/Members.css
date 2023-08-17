@@ -5,10 +5,18 @@
 }
 
 .members-grid {
-  border: 2px solid red;
+  /* border: 2px solid red; */
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   grid-gap: 50px;
   align-items: stretch;
+  max-height: 50%;
+  overflow: auto;
+}
+
+.members-grid {
+  margin-top: 300px;
+  padding: 0px 50px 0px 50px;
   width: 100%;
+  height: 100%;
 }
