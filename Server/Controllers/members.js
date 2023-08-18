@@ -42,17 +42,69 @@ const membersRegister = async (req, res) => {
   }
 };
 
+const findActiveMember = (history) => {
+  if (history.length !== 0) {
+    const date = new Date();
+    const [day, month, year] = history[0].date.split("/");
+    const lastLoginDate = new Date(`${year}-${month}-${day}`);
+    const currentDate = new Date(
+      `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+    );
+    const dateDiff =
+      (currentDate.getTime() - lastLoginDate.getTime()) / (1000 * 60 * 60 * 24);
+    if (dateDiff >= 10) {
+      return false;
+    } else {
+      return true;
+    }
+  } else {
+    return true;
+  }
+};
+const findInActiveMember = (history) => {
+  if (history.length !== 0) {
+    const date = new Date();
+    const [day, month, year] = history[0].date.split("/");
+    const lastLoginDate = new Date(`${year}-${month}-${day}`);
+    const currentDate = new Date(
+      `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+    );
+    const dateDiff =
+      (currentDate.getTime() - lastLoginDate.getTime()) / (1000 * 60 * 60 * 24);
+    if (dateDiff >= 10) {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
+};
+
 const membersData = async (req, res) => {
   try {
     const pipeLine = [
       {
         $project: {
-          __v: 0,
+          name: 1,
+          usn: 1,
+          email: 1,
+          imageLink: 1,
+          linkedinLink: 1,
+          githubLink: 1,
+          loginStatus: 1,
+          history: { $slice: ["$history", -1] },
         },
       },
     ];
     const allMembers = await members.aggregate(pipeLine);
-    res.json(allMembers);
+    const activeMembersCount = allMembers.filter((member) =>
+      findActiveMember(member.history)
+    ).length;
+    const inActiveMembersCount = allMembers.filter((member) =>
+      findInActiveMember(member.history)
+    ).length;
+    res.json({ allMembers, activeMembersCount, inActiveMembersCount });
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
@@ -70,7 +122,7 @@ const memberTable = async (req, res) => {
         history: 1,
       },
     },
-  ]
+  ];
   const memberHistory = await members.aggregate(pipeLine);
   res.json(memberHistory[0].history);
 };
@@ -87,10 +139,10 @@ const memberLogin = async (req, res) => {
   const date = `${day}/${month}/${year}`;
   const currentTime = `${hours}:${minute}:${seconds}`;
 
-  const date1=new Date("2023-4-29");
-  const date2=new Date("2023-4-12");
-  const diff=date2.getTime()-date1.getTime();
-  console.log(diff/(1000 * 60 * 60 * 24));
+  const date1 = new Date("2023-4-29");
+  const date2 = new Date("2023-4-12");
+  const diff = date2.getTime() - date1.getTime();
+  console.log(diff / (1000 * 60 * 60 * 24));
   const pipeLine = [
     {
       $match: { _id: new mongoose.Types.ObjectId(id) },
@@ -120,9 +172,9 @@ const memberLogin = async (req, res) => {
             totalTime: "",
           },
         },
-        $set:{
-          loginStatus:true
-        }
+        $set: {
+          loginStatus: true,
+        },
       });
       if (status) {
         res.status(202).json({ status: true });
@@ -136,7 +188,7 @@ const memberLogin = async (req, res) => {
             $set: {
               [`history.${historySize - 1}.logoutTime`]: currentTime,
               [`history.${historySize - 1}.totalTime`]: totalLabTime.toFixed(2),
-              loginStatus:false
+              loginStatus: false,
             },
           }
         );
@@ -153,9 +205,9 @@ const memberLogin = async (req, res) => {
               totalTime: "",
             },
           },
-          $set:{
-            loginStatus:true
-          }
+          $set: {
+            loginStatus: true,
+          },
         });
         if (status) {
           res.status(202).json({ status: true });
@@ -167,83 +219,60 @@ const memberLogin = async (req, res) => {
     res.status(500).json({ error });
   }
 };
-const findActiveMember=(history)=>{
-  if(history.length!==0){
-    const date=new Date();
-    const [day,month,year]=history[0].date.split("/");
-    const lastLoginDate=new Date(`${year}-${month}-${day}`);
-    const currentDate=new Date(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`)
-    const dateDiff=(currentDate.getTime()-lastLoginDate.getTime())/(1000*60*60*24);
-    if(dateDiff>=10){
-      return false;
-    }else{
-      return true;
-    }
-    
-  }else{
-    return true;
-  }
-}
-const findInActiveMember=(history)=>{
-  if(history.length!==0){
-    const date=new Date();
-    const [day,month,year]=history[0].date.split("/");
-    const lastLoginDate=new Date(`${year}-${month}-${day}`);
-    const currentDate=new Date(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`)
-    const dateDiff=(currentDate.getTime()-lastLoginDate.getTime())/(1000*60*60*24);
-    if(dateDiff>=10){
-      return true;
-    }else{
-      return false;
-    }
-    
-  }else{
-    return false;
-  }
-}
-const activeMembers=async (req,res)=>{
-  const pipeLine=[
-   {
-    $project:{
-      name:1,
-      usn:1,
-      email:1,
-      imageLink:1,
-      githubLink:1,
-      linkedinLink:1,
-      history: { $slice: ["$history", -1] }
-    }
-   }
-  ]
-  try{
-    const allMembers=await members.aggregate(pipeLine);
-    const activeMembers=allMembers.filter((member)=>findActiveMember(member.history));
+
+const activeMembers = async (req, res) => {
+  const pipeLine = [
+    {
+      $project: {
+        name: 1,
+        usn: 1,
+        email: 1,
+        imageLink: 1,
+        githubLink: 1,
+        linkedinLink: 1,
+        history: { $slice: ["$history", -1] },
+      },
+    },
+  ];
+  try {
+    const allMembers = await members.aggregate(pipeLine);
+    const activeMembers = allMembers.filter((member) =>
+      findActiveMember(member.history)
+    );
     res.json(activeMembers);
-  }catch(err){
+  } catch (err) {
     res.status(500).json(err);
   }
-
-}
-const inActiveMembers=async (req,res)=>{
-  const pipeLine=[
+};
+const inActiveMembers = async (req, res) => {
+  const pipeLine = [
     {
-     $project:{
-        name:1,
-         usn:1,
-        email:1,
-         imageLink:1,
-         githubLink:1,
-        linkedinLink:1,
-        history: { $slice: ["$history", -1] }
-     }
-    }
-   ]
-   try{
-     const allMembers=await members.aggregate(pipeLine);
-     const activeMembers=allMembers.filter((member)=>findInActiveMember(member.history));
-     res.json(activeMembers);
-   }catch(err){
-     res.status(500).json(err);
-   }
-}
-module.exports = { membersRegister, membersData, memberTable, memberLogin,activeMembers,inActiveMembers };
+      $project: {
+        name: 1,
+        usn: 1,
+        email: 1,
+        imageLink: 1,
+        githubLink: 1,
+        linkedinLink: 1,
+        history: { $slice: ["$history", -1] },
+      },
+    },
+  ];
+  try {
+    const allMembers = await members.aggregate(pipeLine);
+    const activeMembers = allMembers.filter((member) =>
+      findInActiveMember(member.history)
+    );
+    res.json(activeMembers);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+module.exports = {
+  membersRegister,
+  membersData,
+  memberTable,
+  memberLogin,
+  activeMembers,
+  inActiveMembers,
+};

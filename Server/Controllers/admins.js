@@ -7,7 +7,7 @@ const adminRegister = async (req, res) => {
   const { usn, password, email } = req.body;
   try {
     const user = await admin.findOne({ usn });
-    if (user) {
+    if (user != null) {
       res.status(400).send("User already exists");
     } else {
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -16,7 +16,6 @@ const adminRegister = async (req, res) => {
         password: hashedPassword,
         email,
       });
-
       newAdmin
         .save()
         .then(() => {
@@ -24,7 +23,7 @@ const adminRegister = async (req, res) => {
         })
         .catch((err) => {
           res.status(500).send("Error occured while registration");
-          console.log(err);
+          // console.log(err);
         });
     }
   } catch (err) {

@@ -27,9 +27,6 @@ app.use(
   })
 );
 
-app.get("/data", (req, res) => {
-  res.json({ status: true });
-});
 app.use(cookieParser());
 app.use(express.json());
 app.use("/admin", require("./Routes/adminRoutes"));
