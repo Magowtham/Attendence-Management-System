@@ -5,10 +5,10 @@ import "../CSS/Members.css";
 
 function Members() {
   const [membersData, setMembersData] = useState([]);
-  const [totalMembers, setTotalMembers] = useState("");
-  const [activeMembers, setActiveMembers] = useState("");
-  const [inActiveMembers, setInActiveMembers] = useState("");
   const [searchbar, setSearchbar] = useState(false);
+  const [totalMembers, setTotalMembers] = useState(0);
+  const [activeMembers, setActiveMembers] = useState(0);
+  const [inActiveMembers, setInActiveMembers] = useState(0);
   const searchBarRef = useRef(null);
   const baseUrl = "http://localhost:5001/admin/membersData";
   const handleSearchbar = (e) => {

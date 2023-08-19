@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import "../CSS/Registration.css";
 import { useLocation } from "react-router-dom";
 
 function Registration() {
   const location = useLocation();
+  const formRef = useRef(null);
   const initialFormData = {
     name: "",
     usn: "",
@@ -54,7 +55,14 @@ function Registration() {
     }
     return errors;
   };
-
+  const handleFormRefresh = (e) => {
+    e.preventDefault();
+    setIsFormSetted(false);
+    setFormError({});
+    for (let i = 0; i < 6; i++) {
+      formRef.current[i].value = "";
+    }
+  };
   const handleFormData = (e) => {
     e.preventDefault();
     setIsFormSetted(true);
@@ -150,26 +158,31 @@ function Registration() {
           <p>{adminFormError.error}</p>
           <input type="submit" value="submit" />
         </form>
-        <form onSubmit={handleFormData}>
-          <label for="name">Member Name:</label>
-          <input type="text" id="name" placeholder="Name" />
+        <form ref={formRef} onSubmit={handleFormData}>
+          <h1>Member Registration</h1>
           <p>{formError.nameErr}</p>
-          <label for="usn">Member USN:</label>
-          <input type="text" id="usn" placeholder="USN" />
+          <input type="text" id="name" placeholder="Name" />
           <p>{formError.usnErr}</p>
-          <label for="email">Member Email:</label>
-          <input type="email" id="email" placeholder="Email" />
+          <input type="text" id="usn" placeholder="USN" />
           <p>{formError.emailErr}</p>
-          <label for="email">Member Profile Image URL:</label>
-          <input type="text" id="img-link" placeholder="Profile Image URL" />
+          <input type="email" id="email" placeholder="Email" />
           <p>{formError.imageLinkError}</p>
-          <label for="email">Member Github URL:</label>
-          <input type="text" id="github-link" placeholder="Github URL" />
+          <input type="text" id="img-link" placeholder="Profile Image URL" />
           <p>{formError.githubLinkError}</p>
-          <label for="email">Memeber Linkedin URL:</label>
-          <input type="text" id="linkedin-link" placeholder="Linkedin URL" />
+          <input type="text" id="github-link" placeholder="Github URL" />
           <p>{formError.linkedinLinkError}</p>
-          <input type="submit" value="submit" />
+          <input type="text" id="linkedin-link" placeholder="Linkedin URL" />
+          <div className="form-footer-sec">
+            <button
+              className="material-symbols-outlined refresh-btn"
+              onClick={handleFormRefresh}
+            >
+              refresh
+            </button>
+            <button className="submit-btn" type="submit">
+              Submit
+            </button>
+          </div>
         </form>
       </div>
     </>

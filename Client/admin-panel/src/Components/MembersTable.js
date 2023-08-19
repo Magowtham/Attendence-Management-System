@@ -6,23 +6,26 @@ import "../CSS/MembersTable.css";
 
 function MembersTable() {
   const [memberId, setMemberId] = useState("");
-  const [memberHistory,setMemberHistory]=useState([]);
+  const [memberHistory, setMemberHistory] = useState([]);
   const navigate = useNavigate();
   const { state } = useLocation();
   const baseUrl = "http://localhost:5001/admin/memberTable";
   useEffect(() => {
     setMemberId(state?.id);
-  },[state]);
+  }, [state]);
 
-  useEffect(()=>{
-    if(memberHistory.length===0&&memberId){
-        axios.post(baseUrl,{id:memberId}).then((res)=>{
+  useEffect(() => {
+    if (memberHistory.length === 0 && memberId) {
+      axios
+        .post(baseUrl, { id: memberId })
+        .then((res) => {
           setMemberHistory(res.data);
-        }).catch((err=>{
+        })
+        .catch((err) => {
           console.log(err);
-        }))
-        }
-  },[memberHistory,memberId])
+        });
+    }
+  }, [memberHistory, memberId]);
 
   const columns = useMemo(
     () => [
@@ -61,7 +64,9 @@ function MembersTable() {
   return (
     <>
       <div className="table-container">
-        <button onClick={backRout}>Back</button>
+        <button onClick={backRout} className="material-symbols-outlined">
+          arrow_back_ios
+        </button>
         <table {...getTableProps()}>
           <thead>
             {headerGroups.map((headerGroup) => (

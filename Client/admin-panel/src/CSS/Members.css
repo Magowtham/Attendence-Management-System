@@ -86,7 +86,10 @@
   text-decoration: none;
   border: 3px solid #1cf8bd;
 }
-
+.search-btn:hover {
+  border: 4px solid #1cf8bd;
+  transition: 0.3s ease;
+}
 .search-text {
   border: none;
   background: none;
@@ -102,7 +105,6 @@
 }
 
 .members-grid {
-  /* border: 2px solid red; */
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   grid-gap: 50px;

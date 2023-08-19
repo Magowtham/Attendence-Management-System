@@ -8,6 +8,7 @@ nav {
   /* border: 2px solid rgb(157, 255, 0); */
   padding: 10px;
   background-color: #131833;
+  width: 100%;
 }
 
 nav .logo-sec {
@@ -23,13 +24,12 @@ nav .logo-sec img {
   /* border-radius: 8px; */
 }
 .home-container {
-  /* border: 2px solid rgb(183, 255, 1); */
   display: flex;
+  height: 91vh;
 }
 .side-bar {
   max-width: 250px;
   min-width: 250px;
-  height: 100vh;
   background-color: #131833;
 }
 
@@ -103,7 +103,11 @@ nav .logo-sec img {
   text-transform: capitalize;
   border-radius: 8px;
 }
-
+.side-bar .routes-sec ul li:hover {
+  opacity: 0.7;
+  transform: scale(1.05);
+  transition: 0.3s ease-out;
+}
 .side-bar .routes-sec .footer-sec {
   /* border: 2px solid orange; */
   display: flex;
@@ -119,7 +123,11 @@ nav .logo-sec img {
   cursor: pointer;
   color: black;
 }
-
+.side-bar .routes-sec .footer-sec button:hover {
+  opacity: 0.7;
+  transform: scale(1.05);
+  transition: 0.3s ease-out;
+}
 .hide {
   display: none;
 }
