@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, lazy, Suspense, useRef } from "react";
+import Loader from "./Loader";
 import axios from "axios";
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
-import Members from "./Members";
-import Registration from "./Registration";
-import MembersTable from "./MembersTable";
-import ActiveMembers from "./ActiveMembers";
-import InActiveMembers from "./InActiveMembers";
 import "../CSS/Home.css";
+
+const Members = lazy(() => import("./Members"));
+const Registration = lazy(() => import("./Registration"));
+const MembersTable = lazy(() => import("./MembersTable"));
+const ActiveMembers = lazy(() => import("./ActiveMembers"));
+const InActiveMembers = lazy(() => import("./InActiveMembers"));
 
 function Home() {
   const navigate = useNavigate();
@@ -14,6 +16,8 @@ function Home() {
   const [adminUsn, setAdminUsn] = useState("");
   const [size, setSize] = useState(false);
   const [click, setClick] = useState(false);
+  const [searchbar, setSearchbar] = useState(false);
+  const searchBarRef = useRef(null);
 
   const resizer = () => {
     if (window.innerWidth <= 1000) {
@@ -22,6 +26,17 @@ function Home() {
       setSize(false);
     }
   };
+  const handleSearchbar = (e) => {
+    setSearchbar(!searchbar);
+  };
+  useEffect(() => {
+    window.addEventListener("resize", resizer);
+    resizer();
+    return () => {
+      window.removeEventListener("resize", resizer);
+    };
+  }, []);
+
   useEffect(() => {
     axios
       .get("http://localhost:5001/admin/verify", {
@@ -39,10 +54,6 @@ function Home() {
         console.log(err);
       });
   });
-  useEffect(() => {
-    window.addEventListener("resize", resizer);
-    resizer();
-  }, []);
 
   const handleLogout = () => {
     axios
@@ -56,10 +67,6 @@ function Home() {
         console.log(err);
       });
   };
-
-  if (!verified) {
-    return <p>Loading...</p>;
-  }
 
   return (
     <>
@@ -78,6 +85,19 @@ function Home() {
             <span className={`line  ${click ? `close-2` : ``}`}></span>
             <span className={`line  ${click ? `close-3` : ``}`}></span>
           </button>
+        </div>
+        <div className="search-bar-sec">
+          <div class="search-box">
+            <input
+              className={`search-text ${searchbar ? `open` : ``}`}
+              type="text"
+              placeholder="Search Anything"
+              ref={searchBarRef}
+            />
+            <button className="search-btn" onClick={handleSearchbar}>
+              <i className="fas fa-search"></i>
+            </button>
+          </div>
         </div>
       </nav>
       <div className="home-container">
@@ -123,13 +143,18 @@ function Home() {
           </div>
         </div>
         <div className="sub-components-sec">
-          <Routes>
-            <Route path="/" exact Component={Members} />
-            <Route path="/registration" Component={Registration} />
-            <Route path="/history" Component={MembersTable} />
-            <Route path="/activeMembers" Component={ActiveMembers} />
-            <Route path="/inActiveMembers" Component={InActiveMembers} />
-          </Routes>
+          <div
+            className={`sub-components-sec-overlay ${click ? `open` : ``}`}
+          ></div>
+          <Suspense fallback={<Loader isSubComponent={true} />}>
+            <Routes>
+              <Route path="/" exact Component={Members} />
+              <Route path="/registration" Component={Registration} />
+              <Route path="/history" Component={MembersTable} />
+              <Route path="/activeMembers" Component={ActiveMembers} />
+              <Route path="/inActiveMembers" Component={InActiveMembers} />
+            </Routes>
+          </Suspense>
         </div>
       </div>
     </>

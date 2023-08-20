@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 function Registration() {
   const location = useLocation();
   const formRef = useRef(null);
+  const adminFormRef = useRef(null);
   const initialFormData = {
     name: "",
     usn: "",
@@ -21,6 +22,10 @@ function Registration() {
   const [adminFormError, setAdminFormError] = useState({ passwordError: "" });
   const [adminUsn, setAdminUsn] = useState("");
   const [isAdminValidated, setIsAdminValidated] = useState(false);
+  const [registrationMessage, setRegistrationMessage] = useState({
+    status: false,
+    message: "",
+  });
   const baseUrl = "http://localhost:5001/admin/memberReg";
   const adminAuthUrl = "http://localhost:5001/admin/memberRegAuth";
   const validateFormData = (values) => {
@@ -59,6 +64,7 @@ function Registration() {
     e.preventDefault();
     setIsFormSetted(false);
     setFormError({});
+    setRegistrationMessage({ status: false, message: "" });
     for (let i = 0; i < 6; i++) {
       formRef.current[i].value = "";
     }
@@ -66,7 +72,10 @@ function Registration() {
   const handleFormData = (e) => {
     e.preventDefault();
     setIsFormSetted(true);
+    setRegistrationMessage({ status: false, message: "" });
     setAdminFormError({ error: "" });
+    setIsAdminValidated(false);
+    adminFormRef.current[0].value = "";
     setFormData({
       name: e.target[0].value,
       usn: e.target[1].value,
@@ -132,10 +141,17 @@ function Registration() {
         headers: { "Content-Type": "application/json" },
       })
         .then((response) => {
-          console.log(response.data);
+          setRegistrationMessage({
+            status: response.data?.status,
+            message: response.data?.message,
+          });
         })
         .catch((err) => {
-          console.log(`An error was occured while sending the data ${err}`);
+          console.log(err);
+          setRegistrationMessage({
+            status: false,
+            message: "Failed to connect with server ",
+          });
         });
     }
   }, [isAdminValidated]);
@@ -150,15 +166,15 @@ function Registration() {
       ></div>
       <div className="reg-container">
         <form
+          ref={adminFormRef}
           className={`login-popup-page ${isFormValidated ? `popup` : ``}`}
           onSubmit={authAdmin}
         >
-          <label>Admin Password</label>
-          <input type="password" placeholder="Admin password..." />
           <p>{adminFormError.error}</p>
-          <input type="submit" value="submit" />
+          <input type="password" placeholder="Admin password..." />
+          <button type="submit">Confirm</button>
         </form>
-        <form ref={formRef} onSubmit={handleFormData}>
+        <form className="register-form" ref={formRef} onSubmit={handleFormData}>
           <h1>Member Registration</h1>
           <p>{formError.nameErr}</p>
           <input type="text" id="name" placeholder="Name" />
@@ -173,6 +189,13 @@ function Registration() {
           <p>{formError.linkedinLinkError}</p>
           <input type="text" id="linkedin-link" placeholder="Linkedin URL" />
           <div className="form-footer-sec">
+            <p
+              className={`form-message ${
+                registrationMessage.status ? `success` : ``
+              }`}
+            >
+              {registrationMessage?.message}
+            </p>
             <button
               className="material-symbols-outlined refresh-btn"
               onClick={handleFormRefresh}

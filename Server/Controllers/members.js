@@ -25,20 +25,25 @@ const membersRegister = async (req, res) => {
         .save()
         .then((result) => {
           if (result) {
-            res.status(202).json({ status: true });
+            res
+              .status(202)
+              .json({ status: true, message: "Registration successfull" });
           }
         })
         .catch(() => {
-          res
-            .status(400)
-            .json({ message: "error occured while saving the data" });
+          res.json({
+            status: false,
+            message: "Email id is already exists",
+          });
         });
     } else {
-      res.json({ status: false });
+      res.json({ status: false, message: "Member already exists" });
     }
   } catch (err) {
-    res.status(500);
-    throw new Error(`error occured while saving the data ${err}`);
+    res.json({
+      status: flase,
+      message: "Error occurred while registering the member",
+    });
   }
 };
 

@@ -1,23 +1,24 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, lazy, useMemo } from "react";
 import axios from "axios";
-import Card from "./Card";
 import "../CSS/Members.css";
+import Loader from "./Loader";
+
+const Card = lazy(() => import("./Card"));
 
 function Members() {
   const [membersData, setMembersData] = useState([]);
-  const [searchbar, setSearchbar] = useState(false);
+
   const [totalMembers, setTotalMembers] = useState(0);
   const [activeMembers, setActiveMembers] = useState(0);
   const [inActiveMembers, setInActiveMembers] = useState(0);
-  const searchBarRef = useRef(null);
+  const [data, setData] = useState(false);
+
   const baseUrl = "http://localhost:5001/admin/membersData";
-  const handleSearchbar = (e) => {
-    setSearchbar(!searchbar);
-  };
   useEffect(() => {
     axios
       .get(baseUrl)
       .then((res) => {
+        setData(true);
         setMembersData(res.data?.allMembers);
         setActiveMembers(res.data?.activeMembersCount);
         setInActiveMembers(res.data?.inActiveMembersCount);
@@ -29,6 +30,9 @@ function Members() {
   useEffect(() => {
     setTotalMembers(membersData.length);
   }, [membersData]);
+  if (!data) {
+    return <Loader isSubComponent={true} />;
+  }
   return (
     <>
       <div className="members-container">
@@ -44,19 +48,6 @@ function Members() {
           <div className="inactive-members-sec">
             <h1>{inActiveMembers}</h1>
             <h2>Inactive Members</h2>
-          </div>
-          <div className="search-bar-sec">
-            <div class="search-box">
-              <input
-                className={`search-text ${searchbar ? `open` : ``}`}
-                type="text"
-                placeholder="Search Anything"
-                ref={searchBarRef}
-              />
-              <button className="search-btn" onClick={handleSearchbar}>
-                <i className="fas fa-search"></i>
-              </button>
-            </div>
           </div>
         </div>
         <div className="members-grid">

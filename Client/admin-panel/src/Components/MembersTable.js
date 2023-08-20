@@ -3,10 +3,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useTable } from "react-table";
 import axios from "axios";
 import "../CSS/MembersTable.css";
+import Loader from "./Loader";
 
 function MembersTable() {
   const [memberId, setMemberId] = useState("");
   const [memberHistory, setMemberHistory] = useState([]);
+  const [data, setData] = useState(false);
   const navigate = useNavigate();
   const { state } = useLocation();
   const baseUrl = "http://localhost:5001/admin/memberTable";
@@ -19,6 +21,7 @@ function MembersTable() {
       axios
         .post(baseUrl, { id: memberId })
         .then((res) => {
+          setData(true);
           setMemberHistory(res.data);
         })
         .catch((err) => {
@@ -46,21 +49,22 @@ function MembersTable() {
         accessor: "totalTime",
       },
     ],
-    []
+    [memberHistory]
   );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,
-      data: memberHistory
-        ? memberHistory
-        : [{ datae: "123", loginTime: "12:30", logoutTime: "4:40" }],
+      data: memberHistory,
     });
 
   const backRout = () => {
     navigate("/");
   };
 
+  if (!data) {
+    return <Loader isSubComponent={true} />;
+  }
   return (
     <>
       <div className="table-container">

@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
+import Loader from "./Loader";
 import Card from "./Card";
 import "../CSS/ActiveMembers.css";
 import axios from "axios";
 
 function ActiveMembers() {
   const [activeMembers, setActiveMembers] = useState([]);
+  const [data, setData] = useState(false);
   const baseUrl = "http://localhost:5001/admin/activeMembers";
   useEffect(() => {
     if (activeMembers.length === 0) {
       axios
         .get(baseUrl)
         .then((res) => {
+          setData(true);
           setActiveMembers(res.data);
         })
         .catch((err) => {
@@ -18,6 +21,9 @@ function ActiveMembers() {
         });
     }
   }, [activeMembers]);
+  if (!data) {
+    return <Loader isSubComponent={true} />;
+  }
   return (
     <>
       <div className="active-members-grid">
