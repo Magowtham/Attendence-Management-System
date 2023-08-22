@@ -1,5 +1,5 @@
 import React, { useEffect, useState, lazy, Suspense, useRef } from "react";
-import Loader from "./Loader";
+import SubLoader from "./SubLoader";
 import axios from "axios";
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import "../CSS/Home.css";
@@ -50,7 +50,7 @@ function Home() {
         }
       })
       .catch((err) => {
-        navigate("/AdminLogin");
+        // navigate("/AdminLogin");
         console.log(err);
       });
   });
@@ -138,7 +138,7 @@ function Home() {
               </Link>
             </ul>
             <div className="footer-sec">
-              <button onClick={handleLogout}>Logut</button>
+              <button onClick={handleLogout}>Logout</button>
             </div>
           </div>
         </div>
@@ -146,7 +146,7 @@ function Home() {
           <div
             className={`sub-components-sec-overlay ${click ? `open` : ``}`}
           ></div>
-          <Suspense fallback={<Loader isSubComponent={true} />}>
+          <Suspense fallback={<SubLoader />}>
             <Routes>
               <Route path="/" exact Component={Members} />
               <Route path="/registration" Component={Registration} />

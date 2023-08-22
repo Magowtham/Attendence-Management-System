@@ -1,5 +1,7 @@
 const admin = require("../Models/adminRegModel");
+const sendEmail = require("./sendMail");
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
@@ -99,4 +101,40 @@ const adminLogout = (req, res) => {
     .json({ status: true });
 };
 
-module.exports = { adminRegister, adminLogin, memberRegAuth, adminLogout };
+const generateOtp = (length) => {
+  const otp = crypto.randomInt(
+    Math.pow(10, length - 1),
+    Math.pow(10, length) - 1
+  );
+  return otp.toString();
+};
+
+const sendOtp = async (req, res) => {
+  const { usn } = req.body;
+  const pipeLine = [
+    {
+      $match: { usn },
+    },
+    {
+      $project: {
+        _id: 0,
+        email: 1,
+      },
+    },
+  ];
+  const [user] = await admin.aggregate(pipeLine);
+  if (!user) {
+    res.send({ status: false, message: "USN is not registered" });
+  } else {
+    const otp = generateOtp(4);
+    const emailResult = sendEmail(user?.email, otp, res);
+    res.json(emailResult);
+  }
+};
+module.exports = {
+  adminRegister,
+  adminLogin,
+  memberRegAuth,
+  adminLogout,
+  sendOtp,
+};

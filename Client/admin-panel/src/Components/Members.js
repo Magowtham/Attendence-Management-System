@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState, lazy, useMemo } from "react";
+import React, { useEffect, useState, lazy } from "react";
 import axios from "axios";
 import "../CSS/Members.css";
-import Loader from "./Loader";
+import SubLoader from "./SubLoader";
 
 const Card = lazy(() => import("./Card"));
 
@@ -31,7 +31,7 @@ function Members() {
     setTotalMembers(membersData.length);
   }, [membersData]);
   if (!data) {
-    return <Loader isSubComponent={true} />;
+    return <SubLoader />;
   }
   return (
     <>

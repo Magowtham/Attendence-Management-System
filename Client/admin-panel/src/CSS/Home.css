@@ -247,7 +247,7 @@ nav .logo-sec img {
   position: relative;
 }
 .sub-components-sec-overlay {
-  width: 100vw;
+  width: 100%;
   height: 100%;
   position: absolute;
   left: 0;

@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
+import SubLoader from "./SubLoader";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTable } from "react-table";
 import axios from "axios";
 import "../CSS/MembersTable.css";
-import Loader from "./Loader";
 
 function MembersTable() {
   const [memberId, setMemberId] = useState("");
@@ -63,7 +63,7 @@ function MembersTable() {
   };
 
   if (!data) {
-    return <Loader isSubComponent={true} />;
+    return <SubLoader />;
   }
   return (
     <>

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import Loader from "./Loader";
+import SubLoader from "./SubLoader";
 import Card from "./Card";
 import axios from "axios";
-import Members from "./Members";
+import "../CSS/InActiveMembers.css";
 
 function InActiveMembers() {
   const [inActiveMembers, setInActiveMembers] = useState([]);
@@ -22,7 +22,7 @@ function InActiveMembers() {
     }
   }, [inActiveMembers]);
   if (!data) {
-    return <Loader isSubComponent={true} />;
+    return <SubLoader />;
   }
   return (
     <>

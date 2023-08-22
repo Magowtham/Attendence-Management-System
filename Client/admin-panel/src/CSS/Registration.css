@@ -11,6 +11,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: auto;
 }
 
 .reg-container-overlay {
@@ -81,6 +82,7 @@
 }
 .refresh-btn:hover {
   opacity: 0.7;
+  outline: 3px solid #1cf8bd;
   transform: scale(1.05);
   transition: 0.3s ease-out;
 }

@@ -11,6 +11,7 @@
   align-items: stretch;
   height: 100%;
   overflow: auto;
+  border: 2px solid red;
 }
 
 .inactive-members-grid {

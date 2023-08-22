@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Loader from "./Loader";
+import SubLoader from "./SubLoader";
 import Card from "./Card";
 import "../CSS/ActiveMembers.css";
 import axios from "axios";
@@ -22,7 +22,7 @@ function ActiveMembers() {
     }
   }, [activeMembers]);
   if (!data) {
-    return <Loader isSubComponent={true} />;
+    return <SubLoader />;
   }
   return (
     <>
