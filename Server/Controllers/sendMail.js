@@ -18,13 +18,9 @@ const sendEmail = async (email, otp, res) => {
       text: `hey your otp is ---- ${otp} !!`,
     };
     const emailResult = await transporter.sendMail(details);
-    if (emailResult) {
-      res.json({ status: true, message: "email sent " });
-    } else {
-      res.json({ status: false, message: "failed to send email " });
-    }
+    return { status: true, emailResult };
   } catch (err) {
-    return { status: false, message: "failed to send message" + err };
+    return { status: false, err };
   }
 };
 

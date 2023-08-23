@@ -1,4 +1,5 @@
 const admin = require("../Models/adminRegModel");
+const otpModel = require("../Models/otpModel");
 const sendEmail = require("./sendMail");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
@@ -110,25 +111,88 @@ const generateOtp = (length) => {
 };
 
 const sendOtp = async (req, res) => {
-  const { usn } = req.body;
+  try {
+    const { usn } = req.body;
+    const pipeLine = [
+      {
+        $match: { usn },
+      },
+      {
+        $project: {
+          _id: 0,
+          email: 1,
+        },
+      },
+    ];
+    const deleteResult = await otpModel.deleteMany({ usn });
+    if (!deleteResult.acknowledged) {
+      res.status(500).json({ staus: false, message: "internal server error" });
+      return;
+    }
+    const [user] = await admin.aggregate(pipeLine);
+    if (!user) {
+      res.send({ status: false, message: "USN is not registered" });
+    } else {
+      const otp = generateOtp(4);
+      const emailResult = await sendEmail(user?.email, otp, res);
+      if (!emailResult.status) {
+        res.status(500).json("error occurred while sending the email");
+        return;
+      }
+      const hashedOtp = await bcrypt.hash(otp, 5);
+      const storeOtp = new otpModel({
+        usn,
+        otp: hashedOtp,
+        email: user?.email,
+      });
+      storeOtp
+        .save()
+        .then((data) => {
+          res.json({
+            status: true,
+            message: `otp was sent to ${data?.email}`,
+          });
+        })
+        .catch((err) => {
+          res
+            .status(500)
+            .json({ status: false, message: `internal server error ${err}` });
+          return;
+        });
+    }
+  } catch (err) {
+    res.status(500).json({ status: false, message: "internal server error" });
+  }
+};
+const otpValidater = async (req, res) => {
+  const { usn, otp } = req.body;
   const pipeLine = [
     {
-      $match: { usn },
+      $match: {
+        usn,
+      },
     },
     {
       $project: {
+        otp: 1,
         _id: 0,
-        email: 1,
       },
     },
   ];
-  const [user] = await admin.aggregate(pipeLine);
-  if (!user) {
-    res.send({ status: false, message: "USN is not registered" });
+  const userOtp = await otpModel.aggregate(pipeLine);
+  if (userOtp.length === 0) {
+    res.json({ status: false, message: "invalid otp" });
   } else {
-    const otp = generateOtp(4);
-    const emailResult = sendEmail(user?.email, otp, res);
-    res.json(emailResult);
+    bcrypt.compare(otp, userOtp[0].otp, (err, decodedOtp) => {
+      if (err) {
+        res.status(500).json({ status: false, message: err });
+      }
+      if (decodedOtp) {
+        res.json({ status: true, message: "valid otp" });
+      } else {
+        res.json({ status: false, message: "invalid otp" });
+      }
+    });
   }
 };
 module.exports = {
@@ -137,4 +201,5 @@ module.exports = {
   memberRegAuth,
   adminLogout,
   sendOtp,
+  otpValidater,
 };

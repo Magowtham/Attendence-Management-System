@@ -55,8 +55,8 @@ function AdminLogin() {
           <input type="password" id="password" placeholder="Passowrd.." />
           <p>{loginError.passwordError}</p>
           <input type="submit" value="Submit" />
-          <Link to="/">
-            <p>Register?</p>
+          <Link to="/AdminOtp">
+            <p>Forgot password?</p>
           </Link>
         </form>
       </div>

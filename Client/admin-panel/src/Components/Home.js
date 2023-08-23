@@ -9,6 +9,7 @@ const Registration = lazy(() => import("./Registration"));
 const MembersTable = lazy(() => import("./MembersTable"));
 const ActiveMembers = lazy(() => import("./ActiveMembers"));
 const InActiveMembers = lazy(() => import("./InActiveMembers"));
+const AdminOtp = lazy(() => import("./AdminOtp"));
 
 function Home() {
   const navigate = useNavigate();
@@ -50,7 +51,7 @@ function Home() {
         }
       })
       .catch((err) => {
-        // navigate("/AdminLogin");
+        navigate("/AdminLogin");
         console.log(err);
       });
   });
