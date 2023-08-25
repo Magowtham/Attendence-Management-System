@@ -1,64 +1,99 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../CSS/AdminOtp.css";
 function AdminOtp() {
-  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
-  const [formData, setFormData] = useState({});
-  const [formError, setFormError] = useState({});
-  const [isFormValidated, setIsFormValidated] = useState(false);
-  const [disableButton, setDisableButton] = useState(false);
-  const serverMessageRef = useRef(null);
-  const [otpResult, setOtpResult] = useState(false);
-  const baseUrl = "http://localhost:5001/admin/sendOtp";
+  const navigate = useNavigate();
+  const [adminData, setAdminData] = useState({ usn: "", email: "" });
+  const [isOtpSetted, setIsOtpSetted] = useState(false);
+  const [otpData, setOtpData] = useState({ otp: "" });
+  const [otpError, setOtpError] = useState({});
+  const [isOtpValidated, setIsOtpValidated] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [resendDisable, setResendDisable] = useState(false);
+  const { state } = useLocation();
+  const baseUrl = "http://localhost:5001/admin/verifyOtp";
+  const resendUrl = "http://localhost:5001/admin/sendOtp";
   const handleOtp = (e) => {
     e.preventDefault();
-    setIsFormSubmitted(true);
-    setFormError({});
-    setIsFormValidated(false);
-    serverMessageRef.current.textContent = "";
-    setFormData({ usn: e.target[0].value });
+    setIsOtpSetted(true);
+    setOtpData({ otp: e.target[0]?.value });
+    setOtpError({});
+    setIsOtpValidated(false);
   };
-  const formValidater = () => {
+  const validateOtpData = (otp) => {
     const error = {};
-    if (!formData.usn) {
-      error.usnError = "USN required";
+    if (!otp) {
+      error.otpFieldError = "OTP is required";
     }
-    setFormError(error);
+    setOtpError(error);
     return true;
   };
-  useEffect(() => {
-    if (isFormSubmitted) {
-      setIsFormValidated(formValidater());
-      setIsFormSubmitted(false);
+  const handleResend = async (e) => {
+    e.preventDefault();
+    setOtpError({});
+    try {
+      setLoading(true);
+      const response = await axios.post(resendUrl, { usn: adminData.usn });
+      console.log(response.data);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+      setResendDisable(true);
+      setTimeout(() => {
+        setResendDisable(false);
+      }, 10000);
     }
-  }, [isFormSubmitted]);
+  };
   useEffect(() => {
-    (async () => {
-      if (isFormValidated && Object.keys(formError).length === 0) {
+    setAdminData({ usn: state?.usn, email: state?.email });
+  }, []);
+  useEffect(() => {
+    if (isOtpSetted) setIsOtpValidated(validateOtpData(otpData.otp));
+    setIsOtpSetted(false);
+  }, [isOtpSetted]);
+  useEffect(() => {
+    if (isOtpValidated && Object.keys(otpError).length === 0) {
+      (async () => {
         try {
-          setDisableButton(true);
-          const response = await axios.post(baseUrl, formData);
-          serverMessageRef.current.textContent = response.data?.message;
-          setOtpResult(response.data?.status);
+          setLoading(true);
+          const response = await axios.post(baseUrl, {
+            usn: adminData.usn,
+            otp: otpData.otp,
+          });
+          if (response.data?.status) {
+            navigate("/AdminNewPass");
+          } else {
+            console.log(response.data?.message);
+            setOtpError({ otpFieldError: response.data?.message });
+          }
         } catch (err) {
           console.log(err);
         } finally {
-          setDisableButton(false);
+          setLoading(false);
         }
-      }
-    })();
-  }, [isFormValidated]);
+      })();
+    }
+  }, [isOtpValidated]);
   return (
     <>
       <div className="admin-otp-container">
         <form onSubmit={handleOtp}>
-          <input type="text" placeholder="USN..."></input>
-          <p>{formError.usnError}</p>
-          <p>{disableButton}</p>
-          <button type="submit" disabled={disableButton}>
-            Send OTP
+          <div
+            className={`loading-overlay ${loading ? `form-loading` : ``}`}
+          ></div>
+          <div className={`progress-bar ${loading ? `form-loading` : ``}`}>
+            <div className="progress-bar-value"></div>
+          </div>
+          <h1>Account recovery</h1>
+          <p>Check your email OTP was sent to {adminData?.email}</p>
+          <input type="text" />
+          <p>{otpError.otpFieldError}</p>
+          <button type="submit">Submit</button>
+          <button onClick={handleResend} disabled={resendDisable}>
+            Resend it
           </button>
-          <p ref={serverMessageRef}></p>
         </form>
       </div>
     </>

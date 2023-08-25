@@ -150,7 +150,7 @@ const sendOtp = async (req, res) => {
         .then((data) => {
           res.json({
             status: true,
-            message: `otp was sent to ${data?.email}`,
+            email: data?.email,
           });
         })
         .catch((err) => {

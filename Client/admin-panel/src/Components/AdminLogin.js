@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../CSS/AdminLogin.css";
 import axios from "axios";
 
@@ -11,6 +11,8 @@ function AdminLogin() {
   const [isForgotValidated, setIsForgotValidated] = useState();
   const [forgotData, setForgotData] = useState({ usn: "" });
   const [isForgotSetted, setIsForgotSetted] = useState(false);
+  const [otpError, setOtpError] = useState({ message: "" });
+  const [loading, setLoading] = useState(false);
   const usnInputRef = useRef(null);
   const navigate = useNavigate();
   const handleLogin = (e) => {
@@ -47,11 +49,19 @@ function AdminLogin() {
     if (isForgotValidated && Object.keys(loginError).keys.length === 0) {
       (async () => {
         try {
+          setLoading(true);
           const response = await axios.post(sendOtpUrl, forgotData);
-          console.log(response.data);
+          if (response.data?.status) {
+            navigate("/AdminOtp", {
+              state: { usn: forgotData.usn, email: response.data?.email },
+            });
+          } else {
+            otpError.message = response.data?.message;
+          }
         } catch (err) {
           console.log(err);
         } finally {
+          setLoading(false);
           console.log("completed");
         }
       })();
@@ -88,6 +98,12 @@ function AdminLogin() {
     <>
       <div className="admin-login-container">
         <form onSubmit={handleLogin}>
+          <div
+            className={`loading-overlay ${loading ? `form-loading` : ``}`}
+          ></div>
+          <div className={`progress-bar ${loading ? `form-loading` : ``}`}>
+            <div className="progress-bar-value"></div>
+          </div>
           <label>USN</label>
           <input
             ref={usnInputRef}
@@ -101,6 +117,7 @@ function AdminLogin() {
           <p>{loginError.passwordError}</p>
           <input type="submit" value="Submit" />
           <button onClick={handleForgot}>Forgot password?</button>
+          <p>{otpError.message}</p>
         </form>
       </div>
     </>
