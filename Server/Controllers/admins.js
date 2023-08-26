@@ -195,6 +195,21 @@ const otpValidater = async (req, res) => {
     });
   }
 };
+const adminNewPassUpdater= async (req,res)=>{
+  try{
+    const usn=req.params.usn;
+    const {password}=req.body;
+    console.log(usn,password);
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const updateResult=await admin.findOneAndUpdate({usn},{$set:{password:hashedPassword}},{new:true});
+   if(updateResult){
+    res.json({status:true,message:"password changed"})
+   }
+    
+  }catch(err){
+    res.status(500).json({status:false,message:`internal server error ${err}`})
+  }
+}
 module.exports = {
   adminRegister,
   adminLogin,
@@ -202,4 +217,5 @@ module.exports = {
   adminLogout,
   sendOtp,
   otpValidater,
+  adminNewPassUpdater
 };

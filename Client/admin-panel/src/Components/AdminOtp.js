@@ -63,7 +63,7 @@ function AdminOtp() {
             otp: otpData.otp,
           });
           if (response.data?.status) {
-            navigate("/AdminNewPass");
+            navigate("/AdminNewPass",{state:{...state,otpVerified:true}});
           } else {
             console.log(response.data?.message);
             setOtpError({ otpFieldError: response.data?.message });
@@ -76,6 +76,11 @@ function AdminOtp() {
       })();
     }
   }, [isOtpValidated]);
+  useEffect(()=>{
+      if(!state?.forgot){
+        navigate("/AdminLogin")
+      }
+  },[state])
   return (
     <>
       <div className="admin-otp-container">

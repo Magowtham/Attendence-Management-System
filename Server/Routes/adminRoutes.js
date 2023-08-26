@@ -6,6 +6,7 @@ const {
   adminLogout,
   sendOtp,
   otpValidater,
+  adminNewPassUpdater
 } = require("../Controllers/admins");
 const {
   membersRegister,
@@ -14,7 +15,7 @@ const {
   activeMembers,
   inActiveMembers,
 } = require("../Controllers/members");
-const authToken = require("../Controllers/authToken");
+const authToken = require("../Controllers/authToken");;
 const routes = express.Router();
 
 routes.get("/verify", authToken, (req, res) => {});
@@ -29,5 +30,5 @@ routes.post("/memberRegAuth", memberRegAuth);
 routes.get("/logout", adminLogout);
 routes.post("/sendOtp", sendOtp);
 routes.post("/verifyOtp", otpValidater);
-
+routes.put("/newPassword/:usn",adminNewPassUpdater);
 module.exports = routes;

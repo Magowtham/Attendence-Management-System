@@ -53,7 +53,11 @@ function AdminLogin() {
           const response = await axios.post(sendOtpUrl, forgotData);
           if (response.data?.status) {
             navigate("/AdminOtp", {
-              state: { usn: forgotData.usn, email: response.data?.email },
+              state: {
+                usn: forgotData.usn,
+                email: response.data?.email,
+                forgot: true,
+              },
             });
           } else {
             otpError.message = response.data?.message;
@@ -104,20 +108,19 @@ function AdminLogin() {
           <div className={`progress-bar ${loading ? `form-loading` : ``}`}>
             <div className="progress-bar-value"></div>
           </div>
-          <label>USN</label>
-          <input
-            ref={usnInputRef}
-            type="text"
-            id="usn"
-            placeholder="Universal Serial Number.."
-          />
+          <h1>Login </h1>
+          <input type="text" placeholder="USN" ref={usnInputRef} />
           <p>{loginError.usnError}</p>
-          <label>Passowrd</label>
           <input type="password" id="password" placeholder="Passowrd.." />
           <p>{loginError.passwordError}</p>
-          <input type="submit" value="Submit" />
-          <button onClick={handleForgot}>Forgot password?</button>
-          <p>{otpError.message}</p>
+          <div className="form-sub-footer-sec">
+            <button onClick={handleForgot}>Forgot password?</button>
+            <input type="submit" value="Submit" />
+          </div>
+          <div className="form-footer-sec">
+            <button>Register?</button>
+            <p>{otpError.message}</p>
+          </div>
         </form>
       </div>
     </>
