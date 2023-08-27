@@ -38,11 +38,11 @@ const adminLogin = async (req, res) => {
   const { usn, password } = req.body;
   const user = await admin.findOne({ usn });
   if (user === null) {
-    res.status(400).send("user does't exist");
+    res.json({ status: false, usnError: "invalid usn" });
   } else {
     bcrypt.compare(password, user?.password, (err, result) => {
       if (err) {
-        res.status(500).send("Error occured while validating  password");
+        res.status(500).json({ status: false, message: err });
       }
       if (result) {
         const payload = {
@@ -58,7 +58,7 @@ const adminLogin = async (req, res) => {
           .cookie("token", token, { expires: expirationDate, httpOnly: true })
           .json({ status: true });
       } else {
-        res.status(400).json({ status: false });
+        res.json({ status: false, passwordError: "incorrect password" });
       }
     });
   }
@@ -195,21 +195,26 @@ const otpValidater = async (req, res) => {
     });
   }
 };
-const adminNewPassUpdater= async (req,res)=>{
-  try{
-    const usn=req.params.usn;
-    const {password}=req.body;
-    console.log(usn,password);
+const adminNewPassUpdater = async (req, res) => {
+  try {
+    const usn = req.params.usn;
+    const { password } = req.body;
+    console.log(usn, password);
     const hashedPassword = await bcrypt.hash(password, 10);
-    const updateResult=await admin.findOneAndUpdate({usn},{$set:{password:hashedPassword}},{new:true});
-   if(updateResult){
-    res.json({status:true,message:"password changed"})
-   }
-    
-  }catch(err){
-    res.status(500).json({status:false,message:`internal server error ${err}`})
+    const updateResult = await admin.findOneAndUpdate(
+      { usn },
+      { $set: { password: hashedPassword } },
+      { new: true }
+    );
+    if (updateResult) {
+      res.json({ status: true, message: "password changed" });
+    }
+  } catch (err) {
+    res
+      .status(500)
+      .json({ status: false, message: `internal server error ${err}` });
   }
-}
+};
 module.exports = {
   adminRegister,
   adminLogin,
@@ -217,5 +222,5 @@ module.exports = {
   adminLogout,
   sendOtp,
   otpValidater,
-  adminNewPassUpdater
+  adminNewPassUpdater,
 };

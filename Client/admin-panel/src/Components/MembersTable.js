@@ -91,6 +91,9 @@ function MembersTable() {
                   {row.cells.map((cell) => (
                     <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
                   ))}
+                  <button style={{ backgroundColor: "red", padding: "20px" }}>
+                    click
+                  </button>
                 </tr>
               );
             })}

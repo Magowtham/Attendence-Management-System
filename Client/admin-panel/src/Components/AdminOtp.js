@@ -63,7 +63,9 @@ function AdminOtp() {
             otp: otpData.otp,
           });
           if (response.data?.status) {
-            navigate("/AdminNewPass",{state:{...state,otpVerified:true}});
+            navigate("/AdminNewPass", {
+              state: { ...state, otpVerified: true },
+            });
           } else {
             console.log(response.data?.message);
             setOtpError({ otpFieldError: response.data?.message });
@@ -76,11 +78,11 @@ function AdminOtp() {
       })();
     }
   }, [isOtpValidated]);
-  useEffect(()=>{
-      if(!state?.forgot){
-        navigate("/AdminLogin")
-      }
-  },[state])
+  useEffect(() => {
+    if (!state?.forgot) {
+      navigate("/AdminLogin");
+    }
+  }, [state]);
   return (
     <>
       <div className="admin-otp-container">
@@ -92,13 +94,27 @@ function AdminOtp() {
             <div className="progress-bar-value"></div>
           </div>
           <h1>Account recovery</h1>
-          <p>Check your email OTP was sent to {adminData?.email}</p>
-          <input type="text" />
-          <p>{otpError.otpFieldError}</p>
-          <button type="submit">Submit</button>
-          <button onClick={handleResend} disabled={resendDisable}>
-            Resend it
-          </button>
+          <p>
+            Check your email OTP was sent to{" "}
+            <span style={{ color: "#1cf8bd" }}>{adminData?.email}</span>
+          </p>
+          <p style={{ color: "red", margin: "30px 0px 2px 0px" }}>
+            {otpError.otpFieldError}
+          </p>
+          <input type="text" placeholder="OTP" autoComplete="new-otp" />
+          <div className="footer-sec">
+            <button
+              onClick={handleResend}
+              disabled={resendDisable}
+              style={{
+                opacity: `${resendDisable ? `0.6` : `1`}`,
+                pointerEvents: `${resendDisable ? `none` : ``}`,
+              }}
+            >
+              Resend it
+            </button>
+            <button type="submit">Submit</button>
+          </div>
         </form>
       </div>
     </>

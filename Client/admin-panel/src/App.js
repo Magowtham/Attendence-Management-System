@@ -1,7 +1,7 @@
 import React, { lazy, useState, Suspense } from "react";
 import Loader from "./Components/Loader";
 import { Route, Routes } from "react-router-dom";
-
+import MembersData from "./Components/MembersData";
 const Home = lazy(() => import("./Components/Home"));
 const AdminLogin = lazy(() => import("./Components/AdminLogin"));
 const AdminRegister = lazy(() => import("./Components/AdminRegister"));

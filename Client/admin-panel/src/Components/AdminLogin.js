@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useFetcher, useNavigate } from "react-router-dom";
 import "../CSS/AdminLogin.css";
 import axios from "axios";
 
@@ -13,7 +13,9 @@ function AdminLogin() {
   const [isForgotSetted, setIsForgotSetted] = useState(false);
   const [otpError, setOtpError] = useState({ message: "" });
   const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = useState(false);
   const usnInputRef = useRef(null);
+  const passwordRef = useRef(null);
   const navigate = useNavigate();
   const handleLogin = (e) => {
     e.preventDefault();
@@ -45,8 +47,23 @@ function AdminLogin() {
     setLoginError({});
     setForgotData({ usn: usnInputRef.current.value });
   };
+  const handleVisibility = (e) => {
+    e.preventDefault();
+    setVisible(!visible);
+  };
+  const handleRegister = (e) => {
+    e.preventDefault();
+    console.log("work under progress..");
+  };
   useEffect(() => {
-    if (isForgotValidated && Object.keys(loginError).keys.length === 0) {
+    if (visible) {
+      passwordRef.current.type = "text";
+    } else {
+      passwordRef.current.type = "password";
+    }
+  }, [visible]);
+  useEffect(() => {
+    if (isForgotValidated && Object.keys(loginError).length === 0) {
       (async () => {
         try {
           setLoading(true);
@@ -66,7 +83,6 @@ function AdminLogin() {
           console.log(err);
         } finally {
           setLoading(false);
-          console.log("completed");
         }
       })();
     }
@@ -84,18 +100,27 @@ function AdminLogin() {
   }, [loginData]);
   useEffect(() => {
     if (isFormSubmitted && Object.keys(loginError).length === 0) {
-      axios
-        .post("http://localhost:5001/admin/login", loginData, {
-          withCredentials: true,
-        })
-        .then((result) => {
-          if (result.status) {
+      (async () => {
+        try {
+          setLoading(true);
+          const response = await axios.post(
+            "http://localhost:5001/admin/login",
+            loginData,
+            {
+              withCredentials: true,
+            }
+          );
+          if (response.data?.status) {
             navigate("/");
+          } else {
+            setLoginError(response.data);
           }
-        })
-        .catch((err) => {
-          console.log(`Error occured while sending the data ${err}`);
-        });
+        } catch (err) {
+          console.log(err);
+        } finally {
+          setLoading(false);
+        }
+      })();
     }
   }, [loginError]);
   return (
@@ -109,16 +134,35 @@ function AdminLogin() {
             <div className="progress-bar-value"></div>
           </div>
           <h1>Login </h1>
-          <input type="text" placeholder="USN" ref={usnInputRef} />
           <p>{loginError.usnError}</p>
-          <input type="password" id="password" placeholder="Passowrd.." />
+          <input
+            type="text"
+            placeholder="USN"
+            ref={usnInputRef}
+            autoComplete="new-username"
+          />
           <p>{loginError.passwordError}</p>
+          <label>
+            <input
+              type="password"
+              ref={passwordRef}
+              placeholder="Passowrd.."
+              autoComplete="new-password"
+            />
+            <button
+              className="material-symbols-outlined"
+              onClick={handleVisibility}
+            >
+              {`${visible ? `visibility` : `visibility_off`}`}
+            </button>
+          </label>
+
           <div className="form-sub-footer-sec">
             <button onClick={handleForgot}>Forgot password?</button>
-            <input type="submit" value="Submit" />
+            <button type="submit">Submit</button>
           </div>
           <div className="form-footer-sec">
-            <button>Register?</button>
+            <button onClick={handleRegister}>Register?</button>
             <p>{otpError.message}</p>
           </div>
         </form>
