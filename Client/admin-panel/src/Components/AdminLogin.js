@@ -53,7 +53,7 @@ function AdminLogin() {
   };
   const handleRegister = (e) => {
     e.preventDefault();
-    console.log("work under progress..");
+    navigate("/adminRegister");
   };
   useEffect(() => {
     if (visible) {

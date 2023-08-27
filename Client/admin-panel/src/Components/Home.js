@@ -9,7 +9,7 @@ const Registration = lazy(() => import("./Registration"));
 const MembersTable = lazy(() => import("./MembersTable"));
 const ActiveMembers = lazy(() => import("./ActiveMembers"));
 const InActiveMembers = lazy(() => import("./InActiveMembers"));
-const AdminOtp = lazy(() => import("./AdminOtp"));
+const AdminRegister = lazy(() => import("./AdminRegister"));
 
 function Home() {
   const navigate = useNavigate();
@@ -154,6 +154,7 @@ function Home() {
               <Route path="/history" Component={MembersTable} />
               <Route path="/activeMembers" Component={ActiveMembers} />
               <Route path="/inActiveMembers" Component={InActiveMembers} />
+              <Route path="/adminRegister" Component={AdminRegister} />
             </Routes>
           </Suspense>
         </div>
