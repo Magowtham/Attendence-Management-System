@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../CSS/AdminRegister.css";
 
 function AdminRegister() {
+  const navigate = useNavigate();
   const baseUrl = "http://localhost:5001/admin/register";
   const [formData, setFormData] = useState({
     usn: "",
@@ -45,13 +47,16 @@ function AdminRegister() {
     }
     if (!formData.newPassword) {
       error.newPassError = "Can't set empty password";
-    } else if (formData.newPassowrd !== formData.confirmedPassword) {
+    } else if (formData.newPassword !== formData.confirmedPassword) {
       error.confirmedPassError = "Password not matching";
     }
     setFormError(error);
     return true;
   };
-
+  const handleLoginRout = (e) => {
+    e.preventDefault();
+    navigate("/AdminLogin");
+  };
   const handleNewPassVisible = (e) => {
     e.preventDefault();
     setIsNewPassVisible(!isNewPassVisible);
@@ -105,6 +110,12 @@ function AdminRegister() {
     <>
       <div className="admin-register-container">
         <form onSubmit={handleAdminRegister}>
+          <div
+            className={`loading-overlay ${loading ? `form-loading` : ``}`}
+          ></div>
+          <div className={`progress-bar ${loading ? `form-loading` : ``}`}>
+            <div className="progress-bar-value"></div>
+          </div>
           <h1>Admin Register</h1>
           <p>{formError.usnError}</p>
           <input type="text" placeholder="USN" autoComplete="new-usn" />
@@ -139,8 +150,8 @@ function AdminRegister() {
             </button>
           </label>
           <div className="footer-sec">
-            <button>Login?</button>
             <button type="submit">Register</button>
+            <button onClick={handleLoginRout}>Login?</button>
           </div>
         </form>
       </div>

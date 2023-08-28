@@ -7,6 +7,7 @@ function AdminLogin() {
   const sendOtpUrl = "http://localhost:5001/admin/sendOtp";
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [loginData, setLoginData] = useState({ usn: "", password: "" });
+  const [isLoginValidated, setIsLoginValidated] = useState(false);
   const [loginError, setLoginError] = useState({});
   const [isForgotValidated, setIsForgotValidated] = useState();
   const [forgotData, setForgotData] = useState({ usn: "" });
@@ -20,17 +21,20 @@ function AdminLogin() {
   const handleLogin = (e) => {
     e.preventDefault();
     setLoginData({ usn: e.target[0].value, password: e.target[1].value });
+    setIsLoginValidated(false);
+    setLoginError({});
     setIsFormSubmitted(true);
   };
-  const loginValidater = (loginData) => {
-    const errors = {};
+  const loginValidater = () => {
+    const error = {};
     if (!loginData.usn) {
-      errors.usnError = "USN required";
+      error.usnError = "USN required";
     }
     if (!loginData.password) {
-      errors.passwordError = "Password required";
+      error.passwordError = "Password required";
     }
-    return errors;
+    setLoginError(error);
+    return true;
   };
   const forgotValidater = () => {
     const error = {};
@@ -95,11 +99,12 @@ function AdminLogin() {
   }, [isForgotSetted]);
   useEffect(() => {
     if (isFormSubmitted) {
-      setLoginError(loginValidater(loginData));
+      setIsLoginValidated(loginValidater());
+      setIsFormSubmitted(false);
     }
-  }, [loginData]);
+  }, [isFormSubmitted]);
   useEffect(() => {
-    if (isFormSubmitted && Object.keys(loginError).length === 0) {
+    if (isLoginValidated && Object.keys(loginError).length === 0) {
       (async () => {
         try {
           setLoading(true);
@@ -122,7 +127,7 @@ function AdminLogin() {
         }
       })();
     }
-  }, [loginError]);
+  }, [isLoginValidated]);
   return (
     <>
       <div className="admin-login-container">

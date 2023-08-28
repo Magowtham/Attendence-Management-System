@@ -11,7 +11,7 @@ const adminRegister = async (req, res) => {
   try {
     const user = await admin.findOne({ usn });
     if (user != null) {
-      res.status(400).send("User already exists");
+      res.json({ status: false, message: "Admin already registered" });
     } else {
       const hashedPassword = await bcrypt.hash(password, 10);
       const newAdmin = new admin({
@@ -22,11 +22,10 @@ const adminRegister = async (req, res) => {
       newAdmin
         .save()
         .then(() => {
-          res.status(201).json(newAdmin);
+          res.json({ status: true, message: "Registeration successfull" });
         })
         .catch((err) => {
-          res.status(500).send("Error occured while registration");
-          // console.log(err);
+          res.json({ status: false, message: err });
         });
     }
   } catch (err) {
