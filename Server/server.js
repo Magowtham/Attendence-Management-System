@@ -32,6 +32,10 @@ app.use(express.json());
 app.use("/admin", require("./Routes/adminRoutes"));
 app.use("/memberLogin", require("./Routes/membersRoute"));
 
+app.get("/test", (req, res) => {
+  console.log("request came");
+});
+
 app.listen(serverPort, function () {
   console.log(`server has been started @ ${serverPort}`);
 });
