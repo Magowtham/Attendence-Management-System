@@ -30,10 +30,14 @@ const memberSchema = new mongoose.Schema({
     type: [Object],
     default: [],
   },
-  loginStatus:{
-    type:Boolean,
-    default:false
-  }
+  loginStatus: {
+    type: Boolean,
+    default: false,
+  },
+  approvedAsAdmin: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 module.exports = mongoose.model("members", memberSchema);

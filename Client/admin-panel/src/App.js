@@ -1,7 +1,7 @@
 import React, { lazy, useState, Suspense } from "react";
 import Loader from "./Components/Loader";
 import { Route, Routes } from "react-router-dom";
-import MembersData from "./Components/MembersData";
+import Test from "./Components/Test";
 const Home = lazy(() => import("./Components/Home"));
 const AdminLogin = lazy(() => import("./Components/AdminLogin"));
 const AdminRegister = lazy(() => import("./Components/AdminRegister"));
@@ -11,7 +11,7 @@ const AdminNewPass = lazy(() => import("./Components/AdminNewPass"));
 function App() {
   return (
     <>
-      <Suspense fallback={<Loader isSubComponent={false} />}>
+      {/* <Suspense fallback={<Loader isSubComponent={false} />}>
         <Routes>
           <Route path="*" exact Component={Home} />
           <Route path="/AdminLogin" Component={AdminLogin} />
@@ -19,7 +19,8 @@ function App() {
           <Route path="/AdminOtp" Component={AdminOtp} />
           <Route path="/AdminNewPass" Component={AdminNewPass} />
         </Routes>
-      </Suspense>
+      </Suspense> */}
+      <Test />
     </>
   );
 }
